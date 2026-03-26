@@ -24,31 +24,12 @@ Appointment: AppointmentID, DateTime, Location, Status, StudentID, StaffID
 ## Tech Stack:
 - HTML, CSS, JavaScripts
 ## Styling:
-Background: background: linear-gradient(180deg, #FFEAEF 0%, #FFDCE4 52.08%, #FEB1C7 100%);
-Primary: #FEB1C7
-Secondary: #ffdce4
-Text color: #1f1f1f
-Buttons has shadow and mouse-hover effect. Active page will have their name highlighted in the nav bar
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- Background: background: linear-gradient(180deg, #FFEAEF 0%, #FFDCE4 52.08%, #FEB1C7 100%);
+- Primary: #FEB1C7
+- Secondary: #ffdce4
+- Text color: #1f1f1f
+- Buttons has shadow and mouse-hover effect. Active page will have their name highlighted in the nav bar
+- everypage has header (nav bar + logo) and footer
 
 
 
