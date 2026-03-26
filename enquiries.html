@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquiries - Student Support System</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="enquiries-page-section">
+                <div class="dashboard-header">
+                    <h1>Past Enquiries</h1>
+                </div>
+
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <h2>All Enquiries</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group enquiries-search-group">
+                            <label for="enquirySearch">Search by ID, category, details, status, or response</label>
+                            <input id="enquirySearch" type="text" placeholder="Search enquiries...">
+                        </div>
+                        <div id="allEnquiriesList" class="enquiry-history-list">
+                            <p class="placeholder-text">No enquiries available.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="scripts/scripts.js"></script>
+</body>
+</html>

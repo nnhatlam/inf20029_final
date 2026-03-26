@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments - Student Support System</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <div id="navbar-container"></div>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="appointments-section">
+                <h1>Appointments</h1>
+                
+                <!-- Upcoming Appointments -->
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <h2>📅 Upcoming Appointments</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="upcomingList" class="appointments-list">
+                            <p class="placeholder-text">No upcoming appointments scheduled.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appointment Requests -->
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <h2>⏳ Appointment Requests</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="section-description">Staff has requested appointments with you</p>
+                        <div id="requestsList" class="appointments-list">
+                            <p class="placeholder-text">No pending appointment requests.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Past Appointments -->
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <h2>✓ Past Appointments</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="pastList" class="appointments-list">
+                            <p class="placeholder-text">No past appointments.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Appointment Detail Modal -->
+    <div id="appointmentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="appointmentDetail"></div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+    
+    <script src="scripts/scripts.js"></script>
+</body>
+</html>

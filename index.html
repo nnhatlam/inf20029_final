@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Support System - Login</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo-container">
+                <img src="images/logo.svg" alt="Student Support System Logo" class="logo">
+            </div>
+            <h1>Student Support System</h1>
+            <p class="subtitle">Sign in to your account</p>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                
+                <div id="errorMessage" class="error-message"></div>
+                
+                <button type="submit" class="btn btn-primary">Sign In</button>
+            </form>
+            
+            <p class="login-help">Demo Credentials:<br>Username: <strong>student</strong><br>Password: <strong>inf20029</strong></p>
+        </div>
+    </div>
+    
+    <script src="scripts/scripts.js"></script>
+</body>
+</html>

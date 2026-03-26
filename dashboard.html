@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Enquiry - Student Support System</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <div id="navbar-container"></div>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="dashboard-section">
+                <div class="dashboard-header">
+                    <h1>Submit Enquiry</h1>
+                    <button id="notificationButton" class="notification-icon-btn" aria-label="Open notifications" type="button">
+                        <span class="notification-icon" aria-hidden="true">&#128276;</span>
+                        <span id="notificationCount" class="notification-count">2</span>
+                    </button>
+                </div>
+
+                <div id="notificationOverlay" class="notification-overlay" aria-hidden="true">
+                    <div class="notification-panel glass-card" role="dialog" aria-modal="true" aria-label="Notifications panel">
+                        <div class="notification-panel-header">
+                            <h2>Notifications</h2>
+                            <button id="notificationClose" class="notification-close-btn" aria-label="Close notifications" type="button">&times;</button>
+                        </div>
+                        <div id="notificationList" class="notification-list">
+                            <div class="notification-item">
+                                <span class="notification-badge">1</span>
+                                <p>You have a new appointment scheduled for tomorrow at 2:00 PM</p>
+                            </div>
+                            <div class="notification-item">
+                                <span class="notification-badge">2</span>
+                                <p>Your enquiry #ENQ001 has been updated with a response</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Enquiry Submit Section -->
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <h2>Submit New Enquiry</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="enquiryForm" class="enquiry-form">
+                            <div class="form-group">
+                                <label for="category">Enquiry Category</label>
+                                <select id="category" name="category" required>
+                                    <option value="">-- Select Category (AI will suggest) --</option>
+                                    <option value="academic">Academic Support</option>
+                                    <option value="financial">Financial Aid</option>
+                                    <option value="accommodation">Accommodation</option>
+                                    <option value="career">Career Services</option>
+                                    <option value="health">Health & Wellbeing</option>
+                                    <option value="technical">Technical Issues</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="details">Enquiry Details</label>
+                                <textarea id="details" name="details" placeholder="Describe your enquiry..." rows="5" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Submit Enquiry</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- AI Response Section -->
+                <div id="aiResponseSection" style="display:none;" class="card glass-card">
+                    <div class="card-header">
+                        <h2>💡 AI Response</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="aiResponse" class="ai-response-content"></div>
+                        <div class="response-actions">
+                            <button id="acceptBtn" class="btn btn-primary">Accept Resolution</button>
+                            <button id="escalateBtn" class="btn btn-secondary">Request Human Assistance</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Previous Enquiries Section -->
+                <div class="card glass-card">
+                    <div class="card-header enquiries-card-header">
+                        <h2>Recent Enquiries</h2>
+                        <button id="viewAllEnquiriesBtn" class="btn btn-secondary">View All</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="enquiriesList" class="enquiries-list">
+                            <p class="placeholder-text">No enquiries yet. Submit your first enquiry above.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+    
+    <script src="scripts/scripts.js"></script>
+</body>
+</html>
