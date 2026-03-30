@@ -20,6 +20,8 @@ the Enquiry should be shown in table with columns: Enquiry ID, Enquiry Details, 
 
 a small side card on the right showing upcoming appointment
 
+an AI chat bot small button on the bottom right part of the page, when clicked will show a small pop up message for chatting
+
 Enquiry:
 View all enquiries
 
@@ -60,10 +62,10 @@ Appointment: AppointmentID, DateTime, Location, Status, StudentID, StaffID
 
 - Student Support System - Main Stylesheet
 - Colors:
-- - Background: linear-gradient(180deg, #FFEAEF 0%, #FFDCE4 52.08%, #FEB1C7 100%)
-- - Primary: #9e182b, text: #f2e0d2 (use this for nav bar, primary buttons and footer)
-- - Secondary: #f9cb56, text: #9e182b (use this for secondary buttons, highlights and accents)
-    shadow or border: #f2afbc
+- - Background: linear-gradient(180deg, #F5f5f5 0%, #d9d5df 52.08%, #cd2e3d 100%)
+- - Primary: #2d211c, text: #f5f5f5 (use this for nav bar, primary buttons and footer)
+- - Secondary: #cd2e3d, text: #f5f5f5 (use this for secondary buttons, highlights and accents)
+    shadow or border: #d9d5df
     make the button bigger,, change font to Poppins
 
   \*/

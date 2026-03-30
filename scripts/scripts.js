@@ -345,6 +345,7 @@ function initializeDashboard() {
     bindCategoryChips();
     renderDashboardEnquiriesTable();
     renderDashboardAppointmentCard();
+    initializeStudentChatbot();
 }
 
 function setDashboardHeader() {
@@ -599,6 +600,105 @@ function renderNotifications() {
             </div>
         `;
     }).join('');
+}
+
+function initializeStudentChatbot() {
+    if (isManager()) {
+        return;
+    }
+
+    const fab = document.getElementById('chatbotFab');
+    const panel = document.getElementById('chatbotPanel');
+    const closeBtn = document.getElementById('chatbotClose');
+    const sendBtn = document.getElementById('chatbotSend');
+    const input = document.getElementById('chatbotInput');
+    const messages = document.getElementById('chatbotMessages');
+
+    if (!fab || !panel || !closeBtn || !sendBtn || !input || !messages) {
+        return;
+    }
+
+    function openPanel() {
+        panel.classList.add('show');
+        input.focus();
+    }
+
+    function closePanel() {
+        panel.classList.remove('show');
+    }
+
+    function appendMessage(text, sender) {
+        const item = document.createElement('p');
+        item.className = `chatbot-message ${sender}`;
+        item.textContent = text;
+        messages.appendChild(item);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    function buildReply(rawText) {
+        const text = rawText.toLowerCase();
+
+        if (text.includes('appointment') || text.includes('book')) {
+            return 'Go to Appointments and use Book Appointment on a pending invitation from staff. You can only book when invited.';
+        }
+
+        if (text.includes('category') || text.includes('enquiry type')) {
+            return 'You can tap a category chip before submitting. If you skip it, a random category is assigned automatically.';
+        }
+
+        if (text.includes('status') || text.includes('progress')) {
+            return 'Track enquiry status in Enquiries: Submitted, Resolving, Appointment, Resolved, or Canceled.';
+        }
+
+        if (text.includes('hello') || text.includes('hi')) {
+            return 'Hi! Ask me about creating enquiries, checking statuses, or booking appointments.';
+        }
+
+        return 'I can help with enquiry submission, category selection, and appointment booking flow.';
+    }
+
+    function sendChat() {
+        const text = input.value.trim();
+        if (!text) {
+            return;
+        }
+
+        appendMessage(text, 'user');
+        input.value = '';
+
+        window.setTimeout(function () {
+            appendMessage(buildReply(text), 'bot');
+        }, 180);
+    }
+
+    fab.addEventListener('click', function () {
+        if (panel.classList.contains('show')) {
+            closePanel();
+            return;
+        }
+        openPanel();
+    });
+
+    closeBtn.addEventListener('click', closePanel);
+    sendBtn.addEventListener('click', sendChat);
+    input.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            sendChat();
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!panel.classList.contains('show')) {
+            return;
+        }
+
+        const clickedInsidePanel = panel.contains(event.target);
+        const clickedFab = fab.contains(event.target);
+        if (!clickedInsidePanel && !clickedFab) {
+            closePanel();
+        }
+    });
 }
 
 async function loadNotificationsConfig() {
