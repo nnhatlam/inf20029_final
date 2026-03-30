@@ -8,108 +8,64 @@
 </head>
 <body>
     <div id="navbar-container"></div>
-    
+
     <main class="main-content">
         <div class="container">
             <section class="settings-section">
                 <h1>Settings</h1>
-                
-                <!-- Personal Information -->
-                <div class="card glass-card">
+
+                <article class="card account-card">
                     <div class="card-header">
-                        <h2>👤 Personal Information</h2>
+                        <h2>Account Settings</h2>
                     </div>
-                    <div class="card-body">
-                        <form id="settingsForm" class="settings-form">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="studentID">Student ID</label>
-                                    <input type="text" id="studentID" name="studentID" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label for="studentName">Full Name</label>
-                                    <input type="text" id="studentName" name="studentName" readonly>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="email">Email Address</label>
-                                    <input type="email" id="email" name="email" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label for="major">Major</label>
-                                    <input type="text" id="major" name="major" readonly>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="username">Username</label>
-                                <input type="text" id="username" name="username" readonly>
-                            </div>
-
-                            <button type="button" class="btn btn-secondary" onclick="alert('Editing is disabled in this version')">Edit Information</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Account Management -->
-                <div class="card glass-card">
-                    <div class="card-header">
-                        <h2>🔒 Account Management</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="settings-option">
-                            <h3>Change Password</h3>
-                            <p>Update your account password</p>
-                            <button type="button" class="btn btn-secondary" onclick="alert('Feature not available in this version')">Change Password</button>
-                        </div>
-                        <hr>
-                        <div class="settings-option">
-                            <h3>Two-Factor Authentication</h3>
-                            <p>Add an extra layer of security to your account</p>
-                            <button type="button" class="btn btn-secondary" onclick="alert('Feature not available in this version')">Enable 2FA</button>
+                    <div class="card-body account-layout">
+                        <div class="profile-image-placeholder" aria-hidden="true">Student</div>
+                        <div class="profile-details">
+                            <p><strong>Name:</strong> <span id="profileName"></span></p>
+                            <p><strong>Student ID:</strong> <span id="profileStudentId"></span></p>
+                            <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                            <p><strong>Phone:</strong> <span id="profilePhone"></span></p>
+                            <p><strong>Major:</strong> <span id="profileMajor"></span></p>
+                            <button id="changePasswordBtn" type="button" class="btn btn-secondary">Change Password</button>
                         </div>
                     </div>
-                </div>
+                </article>
 
-                <!-- Preferences -->
-                <div class="card glass-card">
+                <article class="card">
                     <div class="card-header">
-                        <h2>⚙️ Preferences</h2>
+                        <h2>Notification Preferences</h2>
                     </div>
                     <div class="card-body">
                         <div class="settings-option">
-                            <label for="notifications">
-                                <input type="checkbox" id="notifications" checked>
-                                Enable Email Notifications
+                            <label for="prefEmail">
+                                <input type="checkbox" id="prefEmail">
+                                Email notifications
                             </label>
                         </div>
                         <div class="settings-option">
-                            <label for="darkMode">
-                                <input type="checkbox" id="darkMode">
-                                Dark Mode (Experimental)
+                            <label for="prefPush">
+                                <input type="checkbox" id="prefPush">
+                                Push notifications
                             </label>
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="savePreferences()">Save Preferences</button>
+                        <div class="settings-option">
+                            <label for="prefWeekly">
+                                <input type="checkbox" id="prefWeekly">
+                                Weekly summary
+                            </label>
+                        </div>
+                        <div class="settings-actions">
+                            <button id="saveSettingsBtn" type="button" class="btn btn-primary">Save Settings</button>
+                            <button id="signOutBtn" type="button" class="btn btn-danger">Sign Out</button>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Danger Zone -->
-                <div class="card glass-card danger-zone">
-                    <div class="card-header">
-                        <h2>⚠️ Danger Zone</h2>
-                    </div>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-danger" onclick="logout()">Sign Out</button>
-                    </div>
-                </div>
+                </article>
             </section>
         </div>
     </main>
 
     <div id="footer-container"></div>
-    
+
     <script src="scripts/scripts.js"></script>
 </body>
 </html>

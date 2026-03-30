@@ -8,62 +8,141 @@
 </head>
 <body>
     <div id="navbar-container"></div>
-    
+
     <main class="main-content">
         <div class="container">
             <section class="appointments-section">
                 <h1>Appointments</h1>
-                
-                <!-- Upcoming Appointments -->
-                <div class="card glass-card">
-                    <div class="card-header">
-                        <h2>📅 Upcoming Appointments</h2>
-                    </div>
-                    <div class="card-body">
-                        <div id="upcomingList" class="appointments-list">
-                            <p class="placeholder-text">No upcoming appointments scheduled.</p>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Appointment Requests -->
-                <div class="card glass-card">
+                <article class="card manager-only" id="managerRequestCard" hidden>
                     <div class="card-header">
-                        <h2>⏳ Appointment Requests</h2>
+                        <h2>Request Appointment (Manager)</h2>
                     </div>
                     <div class="card-body">
-                        <p class="section-description">Staff has requested appointments with you</p>
-                        <div id="requestsList" class="appointments-list">
-                            <p class="placeholder-text">No pending appointment requests.</p>
-                        </div>
+                        <form id="managerRequestForm" class="enquiry-form">
+                            <div class="form-group">
+                                <label for="managerEnquirySelect">Pending Enquiry</label>
+                                <select id="managerEnquirySelect" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="managerStaffName">Staff Name</label>
+                                <input id="managerStaffName" type="text" placeholder="e.g. Ms. Rachel Nguyen" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="managerInviteMessage">Message</label>
+                                <textarea id="managerInviteMessage" rows="3" placeholder="Add request details..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create Appointment Request</button>
+                        </form>
                     </div>
-                </div>
+                </article>
 
-                <!-- Past Appointments -->
-                <div class="card glass-card">
+                <article class="card">
                     <div class="card-header">
-                        <h2>✓ Past Appointments</h2>
+                        <h2>Pending Invitations</h2>
                     </div>
                     <div class="card-body">
-                        <div id="pastList" class="appointments-list">
-                            <p class="placeholder-text">No past appointments.</p>
+                        <p class="field-note">Students can book appointments only from staff invitations and available schedules.</p>
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Invitation ID</th>
+                                        <th>Staff In Charge</th>
+                                        <th>Linked Enquiry</th>
+                                        <th>Message</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invitationTableBody">
+                                    <tr>
+                                        <td colspan="5" class="empty-cell">No pending invitations.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-header">
+                        <h2>Upcoming Appointments</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Appointment ID</th>
+                                        <th>Enquiry ID</th>
+                                        <th>Staff</th>
+                                        <th>DateTime</th>
+                                        <th>Location</th>
+                                        <th>View</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="upcomingAppointmentBody">
+                                    <tr>
+                                        <td colspan="6" class="empty-cell">No upcoming appointments.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-header">
+                        <h2>Past Appointments</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Appointment ID</th>
+                                        <th>Enquiry ID</th>
+                                        <th>Staff</th>
+                                        <th>DateTime</th>
+                                        <th>Location</th>
+                                        <th>View</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pastAppointmentBody">
+                                    <tr>
+                                        <td colspan="6" class="empty-cell">No past appointments.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </article>
             </section>
         </div>
     </main>
 
-    <!-- Appointment Detail Modal -->
-    <div id="appointmentModal" class="modal">
+    <div id="appointmentDetailModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="appointmentDetail"></div>
+            <button id="appointmentDetailClose" class="close" type="button" aria-label="Close appointment detail">&times;</button>
+            <h2>Appointment Detail</h2>
+            <div id="appointmentDetailBody"></div>
+        </div>
+    </div>
+
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <button id="bookingClose" class="close" type="button" aria-label="Close booking modal">&times;</button>
+            <h2 id="bookingTitle">Book Appointment</h2>
+            <p class="field-note">Select one available schedule. Unavailable slots are disabled.</p>
+            <div id="bookingSlots" class="booking-slot-grid"></div>
+            <div class="modal-footer-actions">
+                <button id="confirmBookingBtn" type="button" class="btn btn-primary">Confirm Booking</button>
+            </div>
         </div>
     </div>
 
     <div id="footer-container"></div>
-    
+
     <script src="scripts/scripts.js"></script>
 </body>
 </html>

@@ -3,105 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit Enquiry - Student Support System</title>
+    <title>Dashboard - Student Support System</title>
     <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
     <div id="navbar-container"></div>
-    
+
     <main class="main-content">
         <div class="container">
             <section class="dashboard-section">
                 <div class="dashboard-header">
-                    <h1>Submit Enquiry</h1>
+                    <div>
+                        <h1 id="dashboardTitle">Submit Enquiry Dashboard</h1>
+                        <p id="roleGreeting" class="role-greeting">Hello Student</p>
+                    </div>
                     <button id="notificationButton" class="notification-icon-btn" aria-label="Open notifications" type="button">
                         <span class="notification-icon" aria-hidden="true">&#128276;</span>
-                        <span id="notificationCount" class="notification-count">2</span>
+                        <span id="notificationCount" class="notification-count">0</span>
                     </button>
                 </div>
 
+                <article class="card manager-only" id="managerSummaryCard" hidden>
+                    <div class="card-header">
+                        <h2>Manager Dashboard Summary</h2>
+                    </div>
+                    <div class="card-body manager-metric-grid" id="managerMetrics"></div>
+                </article>
+
+                <article class="card manager-only" id="managerStaffKpiCard" hidden>
+                    <div class="card-header">
+                        <h2>Staff KPI Performance</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="field-note">Click a staff card to view detailed performance.</p>
+                        <div id="staffKpiGrid" class="staff-kpi-grid"></div>
+                    </div>
+                </article>
+
                 <div id="notificationOverlay" class="notification-overlay" aria-hidden="true">
-                    <div class="notification-panel glass-card" role="dialog" aria-modal="true" aria-label="Notifications panel">
-                        <div class="notification-panel-header">
+                    <div class="notification-panel card" role="dialog" aria-modal="true" aria-label="Notifications panel">
+                        <div class="card-header notification-panel-header">
                             <h2>Notifications</h2>
                             <button id="notificationClose" class="notification-close-btn" aria-label="Close notifications" type="button">&times;</button>
                         </div>
-                        <div id="notificationList" class="notification-list">
-                            <div class="notification-item">
-                                <span class="notification-badge">1</span>
-                                <p>You have a new appointment scheduled for tomorrow at 2:00 PM</p>
-                            </div>
-                            <div class="notification-item">
-                                <span class="notification-badge">2</span>
-                                <p>Your enquiry #ENQ001 has been updated with a response</p>
-                            </div>
-                        </div>
+                        <div id="notificationList" class="notification-list"></div>
                     </div>
                 </div>
 
-                <!-- New Enquiry Submit Section -->
-                <div class="card glass-card">
-                    <div class="card-header">
-                        <h2>Submit New Enquiry</h2>
-                    </div>
-                    <div class="card-body">
-                        <form id="enquiryForm" class="enquiry-form">
-                            <div class="form-group">
-                                <label for="category">Enquiry Category</label>
-                                <select id="category" name="category" required>
-                                    <option value="">-- Select Category (AI will suggest) --</option>
-                                    <option value="academic">Academic Support</option>
-                                    <option value="financial">Financial Aid</option>
-                                    <option value="accommodation">Accommodation</option>
-                                    <option value="career">Career Services</option>
-                                    <option value="health">Health & Wellbeing</option>
-                                    <option value="technical">Technical Issues</option>
-                                    <option value="other">Other</option>
-                                </select>
+                <div class="dashboard-grid student-only" id="studentDashboardGrid">
+                    <div class="dashboard-main">
+                        <article class="card">
+                            <div class="card-header">
+                                <h2>New Enquiry</h2>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="details">Enquiry Details</label>
-                                <textarea id="details" name="details" placeholder="Describe your enquiry..." rows="5" required></textarea>
+                            <div class="card-body">
+                                <form id="enquiryForm" class="enquiry-form">
+                                    <div class="form-group">
+                                        <label for="details">Enquiry Details</label>
+                                        <textarea id="details" name="details" rows="5" placeholder="Describe your issue or question..." required></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Choose Category (Optional)</label>
+                                        <p class="field-note">If you do not choose one, a category will be assigned randomly.</p>
+                                        <div class="chip-row">
+                                            <button type="button" class="category-chip" data-category="Documents">Documents</button>
+                                            <button type="button" class="category-chip" data-category="Administrations">Administrations</button>
+                                            <button type="button" class="category-chip" data-category="Calendar &amp; Key Dates">Calendar &amp; Key Dates</button>
+                                            <button type="button" class="category-chip" data-category="Records &amp; Assessments">Records &amp; Assessments</button>
+                                            <button type="button" class="category-chip" data-category="Academic Success">Academic Success</button>
+                                            <button type="button" class="category-chip" data-category="Timetable &amp; Attendance">Timetable &amp; Attendance</button>
+                                            <button type="button" class="category-chip" data-category="IT and Systems">IT and Systems</button>
+                                            <button type="button" class="category-chip" data-category="Other">Other</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="attachment">Attach File (Optional)</label>
+                                        <input id="attachment" name="attachment" type="file">
+                                    </div>
+
+                                    <div id="enquirySubmitError" class="error-message"></div>
+                                    <button type="submit" class="btn btn-primary">Submit Enquiry</button>
+                                </form>
                             </div>
-                            
-                            <button type="submit" class="btn btn-primary">Submit Enquiry</button>
-                        </form>
-                    </div>
-                </div>
+                        </article>
 
-                <!-- AI Response Section -->
-                <div id="aiResponseSection" style="display:none;" class="card glass-card">
-                    <div class="card-header">
-                        <h2>💡 AI Response</h2>
+                        <article class="card">
+                            <div class="card-header enquiries-card-header">
+                                <h2>Recent Enquiries</h2>
+                                <button id="viewAllEnquiriesBtn" type="button" class="btn btn-secondary">View All Enquiries</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-wrap">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Enquiry ID</th>
+                                                <th>Enquiry Details</th>
+                                                <th>Category</th>
+                                                <th>Status</th>
+                                                <th>Response</th>
+                                                <th>Created At</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dashboardEnquiryTableBody">
+                                            <tr>
+                                                <td colspan="6" class="empty-cell">No enquiries yet.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </article>
                     </div>
-                    <div class="card-body">
-                        <div id="aiResponse" class="ai-response-content"></div>
-                        <div class="response-actions">
-                            <button id="acceptBtn" class="btn btn-primary">Accept Resolution</button>
-                            <button id="escalateBtn" class="btn btn-secondary">Request Human Assistance</button>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Previous Enquiries Section -->
-                <div class="card glass-card">
-                    <div class="card-header enquiries-card-header">
-                        <h2>Recent Enquiries</h2>
-                        <button id="viewAllEnquiriesBtn" class="btn btn-secondary">View All</button>
-                    </div>
-                    <div class="card-body">
-                        <div id="enquiriesList" class="enquiries-list">
-                            <p class="placeholder-text">No enquiries yet. Submit your first enquiry above.</p>
-                        </div>
-                    </div>
+                    <aside class="dashboard-side">
+                        <article class="card sticky-side-card">
+                            <div class="card-header">
+                                <h2>Upcoming Appointment</h2>
+                            </div>
+                            <div class="card-body" id="upcomingAppointmentCardBody">
+                                <p class="placeholder-text">No upcoming appointments.</p>
+                            </div>
+                        </article>
+                    </aside>
                 </div>
             </section>
         </div>
     </main>
 
+    <div id="staffKpiModal" class="modal manager-only" hidden>
+        <div class="modal-content">
+            <button id="staffKpiClose" class="close" type="button" aria-label="Close staff performance detail">&times;</button>
+            <h2>Staff Performance Detail</h2>
+            <div id="staffKpiDetailBody"></div>
+        </div>
+    </div>
+
     <div id="footer-container"></div>
-    
+
     <script src="scripts/scripts.js"></script>
 </body>
 </html>

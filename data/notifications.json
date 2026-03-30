@@ -1,0 +1,13 @@
+{
+  "notifications": [
+    {
+      "message": "Enquiry ENQ003 has been resolved."
+    },
+    {
+      "message": "Staff Ms. Rachel Nguyen requested an appointment for enquiry ENQ001."
+    },
+    {
+      "message": "Enquiry ENQ002 is being reviewed by support staff."
+    }
+  ]
+}

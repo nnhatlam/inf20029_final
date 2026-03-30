@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard - Student Support System</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="dashboard-section">
+                <div class="dashboard-header">
+                    <div>
+                        <h1 id="dashboardTitle">Manager Dashboard</h1>
+                        <p id="roleGreeting" class="role-greeting">Hello Manager</p>
+                    </div>
+                    <button id="notificationButton" class="notification-icon-btn" aria-label="Open notifications" type="button">
+                        <span class="notification-icon" aria-hidden="true">&#128276;</span>
+                        <span id="notificationCount" class="notification-count">0</span>
+                    </button>
+                </div>
+
+                <!-- Enquiry Summary Cards -->
+                <article class="card">
+                    <div class="card-header">
+                        <h2>Enquiry Summary</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="manager-summary-grid" id="enquirySummary">
+                            <!-- Dynamically populated by JS -->
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Staff Performance Cards -->
+                <article class="card">
+                    <div class="card-header">
+                        <h2>Staff Performance</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="field-note">Performance completion percentage for each staff member.</p>
+                        <div class="staff-performance-grid" id="staffPerformanceGrid">
+                            <!-- Dynamically populated by JS -->
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Staff Performance Detail Modal -->
+                <div id="staffDetailModal" class="modal" role="dialog" aria-modal="true" aria-label="Staff performance details" hidden>
+                    <div class="modal-overlay" id="staffDetailOverlay"></div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 id="staffDetailName">Staff Member Details</h2>
+                            <button id="staffDetailClose" class="modal-close-btn" aria-label="Close" type="button">&times;</button>
+                        </div>
+                        <div class="modal-body" id="staffDetailBody">
+                            <!-- Dynamically populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Overlay -->
+                <div id="notificationOverlay" class="notification-overlay" aria-hidden="true">
+                    <div class="notification-panel card" role="dialog" aria-modal="true" aria-label="Notifications panel">
+                        <div class="card-header notification-panel-header">
+                            <h2>Notifications</h2>
+                            <button id="notificationClose" class="notification-close-btn" aria-label="Close notifications" type="button">&times;</button>
+                        </div>
+                        <div id="notificationList" class="notification-list"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+    <script src="scripts/scripts.js"></script>
+</body>
+</html>
