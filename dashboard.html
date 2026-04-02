@@ -64,6 +64,13 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label>Link To Past Enquiries (Optional)</label>
+                                        <p class="field-note">Use the button below to select previous enquiries for extra context.</p>
+                                        <button id="openPreviousEnquiriesBtn" type="button" class="btn btn-secondary btn-sm">Link Previous Enquiries</button>
+                                        <div id="linkedEnquiriesSummary" class="linked-enquiries-summary"></div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label>Choose Category (Optional)</label>
                                         <p class="field-note">If you do not choose one, a category will be assigned randomly.</p>
                                         <div class="chip-row">
@@ -141,6 +148,19 @@
         </div>
     </div>
 
+    <div id="previousEnquiryModal" class="modal student-only" aria-hidden="true">
+        <div class="modal-content">
+            <button id="previousEnquiryClose" class="close" type="button" aria-label="Close previous enquiry selector">&times;</button>
+            <h2>Link Previous Enquiries</h2>
+            <p class="field-note">Choose one or more previous resolved or canceled enquiries.</p>
+            <div id="pastEnquiryLinks" class="past-enquiry-link-list"></div>
+            <div class="modal-footer-actions link-enquiry-actions">
+                <button id="previousEnquiryCancel" type="button" class="btn btn-secondary">Cancel</button>
+                <button id="previousEnquiryApply" type="button" class="btn btn-primary">Apply Linked Enquiries</button>
+            </div>
+        </div>
+    </div>
+
     <button id="chatbotFab" class="chatbot-fab student-only" type="button" aria-label="Open AI chatbot">AI Chat</button>
 
     <section id="chatbotPanel" class="chatbot-panel student-only" aria-label="AI chatbot panel" aria-live="polite">
@@ -162,3 +182,6 @@
     <script src="scripts/scripts.js"></script>
 </body>
 </html>
+
+
+

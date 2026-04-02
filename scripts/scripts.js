@@ -44,6 +44,9 @@ const APPOINTMENTS_KEY = 'sss_appointments';
 const INVITATIONS_KEY = 'sss_invitations';
 const PREFERENCES_KEY = 'sss_preferences';
 const NOTIFICATIONS_FILE = 'data/notifications.json';
+const SUPPORT_DATA_FILE = 'data/support-data.json';
+const DATA_SEED_KEY = 'sss_seed_version';
+const DATA_SEED_VERSION = '2026-04-02-v1';
 
 const ENQUIRY_CATEGORIES = [
     'Documents',
@@ -71,7 +74,10 @@ const defaultEnquiries = [
         resolvedAt: '',
         linkedAppointmentId: 'APT001',
         attachmentName: '',
-        assignedStaff: 'Ms. Rachel Nguyen'
+        assignedStaff: 'Ms. Rachel Nguyen',
+        linkedPastEnquiryIds: [],
+        feedbackRating: null,
+        feedbackSentAt: ''
     },
     {
         enquiryId: 'ENQ002',
@@ -85,7 +91,10 @@ const defaultEnquiries = [
         resolvedAt: '',
         linkedAppointmentId: '',
         attachmentName: '',
-        assignedStaff: 'Dr. Amit Sharma'
+        assignedStaff: 'Dr. Amit Sharma',
+        linkedPastEnquiryIds: [],
+        feedbackRating: null,
+        feedbackSentAt: ''
     },
     {
         enquiryId: 'ENQ003',
@@ -99,7 +108,10 @@ const defaultEnquiries = [
         resolvedAt: '2026-03-23',
         linkedAppointmentId: '',
         attachmentName: 'Scholarship-Request.pdf',
-        assignedStaff: 'Ms. Chloe Tan'
+        assignedStaff: 'Ms. Chloe Tan',
+        linkedPastEnquiryIds: [],
+        feedbackRating: 5,
+        feedbackSentAt: '2026-03-24'
     },
     {
         enquiryId: 'ENQ004',
@@ -113,7 +125,10 @@ const defaultEnquiries = [
         resolvedAt: '2026-03-24',
         linkedAppointmentId: '',
         attachmentName: '',
-        assignedStaff: 'Mr. Liam Patel'
+        assignedStaff: 'Mr. Liam Patel',
+        linkedPastEnquiryIds: [],
+        feedbackRating: null,
+        feedbackSentAt: ''
     },
     {
         enquiryId: 'ENQ005',
@@ -127,7 +142,61 @@ const defaultEnquiries = [
         resolvedAt: '',
         linkedAppointmentId: '',
         attachmentName: '',
-        assignedStaff: 'Dr. Amit Sharma'
+        assignedStaff: 'Dr. Amit Sharma',
+        linkedPastEnquiryIds: [],
+        feedbackRating: null,
+        feedbackSentAt: ''
+    },
+    {
+        enquiryId: 'ENQ006',
+        studentID: 'SWH01234',
+        details: 'Unable to access exam timetable for Term 2 in the student portal.',
+        category: 'Calendar & Key Dates',
+        status: 'Appointment',
+        response: 'Please attend the scheduled advising appointment for timetable clarification.',
+        createdAt: '2026-03-30',
+        expectedResolvedDay: '2026-04-06',
+        resolvedAt: '',
+        linkedAppointmentId: '',
+        attachmentName: '',
+        assignedStaff: 'Ms. Rachel Nguyen',
+        linkedPastEnquiryIds: ['ENQ003'],
+        feedbackRating: null,
+        feedbackSentAt: ''
+    },
+    {
+        enquiryId: 'ENQ007',
+        studentID: 'SWH01234',
+        details: 'Need advice on unit withdrawal deadline and fee implications.',
+        category: 'Administrations',
+        status: 'Resolved',
+        response: 'Withdrawal deadline details and fee policy emailed to your account.',
+        createdAt: '2026-03-10',
+        expectedResolvedDay: '2026-03-15',
+        resolvedAt: '2026-03-14',
+        linkedAppointmentId: '',
+        attachmentName: '',
+        assignedStaff: 'Mr. Liam Patel',
+        linkedPastEnquiryIds: [],
+        feedbackRating: 4,
+        feedbackSentAt: '2026-03-15'
+    },
+    {
+        enquiryId: 'ENQ008',
+        studentID: 'SWH04567',
+        details: 'Requesting transcript update for internship provider verification.',
+        category: 'Documents',
+        status: 'Resolving',
+        response: 'Transcript office is processing your request.',
+        createdAt: '2026-03-28',
+        expectedResolvedDay: '2026-04-03',
+        resolvedAt: '',
+        linkedAppointmentId: '',
+        attachmentName: 'Internship-Letter.pdf',
+        assignedStaff: 'Ms. Chloe Tan',
+        linkedPastEnquiryIds: [],
+        feedbackRating: null,
+        feedbackSentAt: ''
     }
 ];
 
@@ -139,11 +208,49 @@ const defaultInvitations = [
         staffName: 'Ms. Rachel Nguyen',
         message: 'Please book an appointment to review your assessment record access issue.',
         availableSlots: [
-            { date: '2026-04-01', time: '10:00', available: true },
-            { date: '2026-04-01', time: '13:30', available: false },
-            { date: '2026-04-02', time: '11:00', available: true },
-            { date: '2026-04-03', time: '09:30', available: false },
-            { date: '2026-04-03', time: '14:00', available: true }
+            { date: '2026-04-04', time: '10:00', available: true },
+            { date: '2026-04-04', time: '13:30', available: true },
+            { date: '2026-04-07', time: '09:30', available: true },
+            { date: '2026-04-07', time: '14:00', available: false }
+        ],
+        status: 'Pending'
+    },
+    {
+        invitationId: 'INV002',
+        enquiryId: 'ENQ006',
+        studentID: 'SWH01234',
+        staffName: 'Ms. Rachel Nguyen',
+        message: 'Let us review your exam timetable issue together.',
+        availableSlots: [
+            { date: '2026-04-09', time: '11:00', available: true },
+            { date: '2026-04-09', time: '15:00', available: true },
+            { date: '2026-04-11', time: '10:30', available: false }
+        ],
+        status: 'Pending'
+    },
+    {
+        invitationId: 'INV003',
+        enquiryId: 'ENQ008',
+        studentID: 'SWH04567',
+        staffName: 'Ms. Chloe Tan',
+        message: 'Book a quick call to confirm transcript delivery timeline.',
+        availableSlots: [
+            { date: '2026-04-08', time: '09:00', available: true },
+            { date: '2026-04-08', time: '14:30', available: true },
+            { date: '2026-04-10', time: '13:00', available: false }
+        ],
+        status: 'Pending'
+    },
+    {
+        invitationId: 'INV004',
+        enquiryId: 'ENQ005',
+        studentID: 'SWH04567',
+        staffName: 'Dr. Amit Sharma',
+        message: 'Please choose a slot so we can troubleshoot your Wi-Fi issue.',
+        availableSlots: [
+            { date: '2026-04-05', time: '10:00', available: true },
+            { date: '2026-04-05', time: '16:00', available: true },
+            { date: '2026-04-12', time: '09:30', available: true }
         ],
         status: 'Pending'
     }
@@ -162,13 +269,23 @@ const defaultAppointments = [
     },
     {
         appointmentId: 'APT002',
-        enquiryId: '',
+        enquiryId: 'ENQ003',
         dateTime: '2026-03-18 09:30',
         location: 'Online - Teams',
         status: 'Past',
         studentID: 'SWH01234',
         staffID: 'STF077',
         staffName: 'Dr. Amit Sharma'
+    },
+    {
+        appointmentId: 'APT003',
+        enquiryId: 'ENQ007',
+        dateTime: '2026-03-22 14:00',
+        location: 'Student Services Hub - Consultation Room 2',
+        status: 'Past',
+        studentID: 'SWH01234',
+        staffID: 'STF114',
+        staffName: 'Mr. Liam Patel'
     }
 ];
 
@@ -184,6 +301,14 @@ let invitations = loadState(INVITATIONS_KEY, defaultInvitations);
 let customNotifications = [];
 let selectedDashboardCategory = '';
 let activeInvitationId = '';
+let selectedLinkedEnquiryIds = [];
+let stagedLinkedEnquiryIds = [];
+let bookingCalendarView = {
+    invitationId: '',
+    year: 0,
+    month: 0,
+    selectedDay: ''
+};
 
 const modalState = {
     enquiryId: '',
@@ -191,6 +316,7 @@ const modalState = {
 };
 
 document.addEventListener('DOMContentLoaded', async function () {
+    await hydrateSupportDataState();
     await loadNotificationsConfig();
 
     if (document.getElementById('navbar-container')) {
@@ -202,7 +328,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     const currentPage = window.location.pathname.split('/').pop();
-    const protectedPages = ['dashboard.html', 'enquiries.html', 'appointments.html', 'settings.html', 'manager-dashboard.html'];
+    const protectedPages = ['dashboard.html', 'enquiries.html', 'appointments.html', 'settings.html', 'manager-dashboard.html', 'feedback.html'];
 
     if (protectedPages.includes(currentPage) && !currentUser) {
         window.location.href = 'index.html';
@@ -240,6 +366,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     if (document.querySelector('.settings-section')) {
         initializeSettingsPage();
+    }
+
+    if (document.querySelector('.feedback-section')) {
+        initializeFeedbackPage();
     }
 });
 
@@ -343,6 +473,9 @@ function initializeDashboard() {
     }
 
     bindCategoryChips();
+    bindPreviousEnquiryModalActions();
+    renderPastEnquiryLinks();
+    renderLinkedEnquiriesSummary();
     renderDashboardEnquiriesTable();
     renderDashboardAppointmentCard();
     initializeStudentChatbot();
@@ -478,7 +611,10 @@ function handleDashboardEnquirySubmit(event) {
         resolvedAt: '',
         linkedAppointmentId: '',
         attachmentName,
-        assignedStaff: getRandomStaff()
+        assignedStaff: getRandomStaff(),
+        linkedPastEnquiryIds: [...selectedLinkedEnquiryIds],
+        feedbackRating: null,
+        feedbackSentAt: ''
     };
 
     enquiries.unshift(newEnquiry);
@@ -494,12 +630,144 @@ function handleDashboardEnquirySubmit(event) {
     }
 
     selectedDashboardCategory = '';
+    selectedLinkedEnquiryIds = [];
+    stagedLinkedEnquiryIds = [];
     document.querySelectorAll('.category-chip').forEach(function (chip) {
         chip.classList.remove('selected');
     });
 
+    renderPastEnquiryLinks();
+    renderLinkedEnquiriesSummary();
     renderDashboardEnquiriesTable();
     renderNotifications();
+}
+
+function bindPreviousEnquiryModalActions() {
+    const openBtn = document.getElementById('openPreviousEnquiriesBtn');
+    const closeBtn = document.getElementById('previousEnquiryClose');
+    const cancelBtn = document.getElementById('previousEnquiryCancel');
+    const applyBtn = document.getElementById('previousEnquiryApply');
+    const modal = document.getElementById('previousEnquiryModal');
+
+    if (openBtn) {
+        openBtn.addEventListener('click', openPreviousEnquiryModal);
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closePreviousEnquiryModal);
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', closePreviousEnquiryModal);
+    }
+
+    if (applyBtn) {
+        applyBtn.addEventListener('click', applyPreviousEnquirySelection);
+    }
+
+    if (modal) {
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                closePreviousEnquiryModal();
+            }
+        });
+    }
+}
+
+function openPreviousEnquiryModal() {
+    const modal = document.getElementById('previousEnquiryModal');
+    if (!modal) {
+        return;
+    }
+
+    stagedLinkedEnquiryIds = [...selectedLinkedEnquiryIds];
+    renderPastEnquiryLinks();
+    modal.classList.add('show');
+}
+
+function closePreviousEnquiryModal() {
+    const modal = document.getElementById('previousEnquiryModal');
+    if (!modal) {
+        return;
+    }
+
+    stagedLinkedEnquiryIds = [...selectedLinkedEnquiryIds];
+    modal.classList.remove('show');
+}
+
+function applyPreviousEnquirySelection() {
+    selectedLinkedEnquiryIds = [...stagedLinkedEnquiryIds];
+    renderLinkedEnquiriesSummary();
+    closePreviousEnquiryModal();
+}
+
+function renderPastEnquiryLinks() {
+    const container = document.getElementById('pastEnquiryLinks');
+    if (!container || isManager()) {
+        return;
+    }
+
+    const rows = getPastEnquiriesForCurrentStudent();
+    if (rows.length === 0) {
+        container.innerHTML = '<p class="muted-text">No past enquiries available to link yet.</p>';
+        return;
+    }
+
+    container.innerHTML = rows.map(function (enquiry) {
+        const selected = stagedLinkedEnquiryIds.includes(enquiry.enquiryId);
+        return `
+            <button
+                type="button"
+                class="past-enquiry-link-btn ${selected ? 'selected' : ''}"
+                data-enquiry-id="${enquiry.enquiryId}"
+                onclick="togglePastEnquirySelection('${enquiry.enquiryId}')"
+            >
+                <strong>${enquiry.enquiryId}</strong>: ${escapeHtml(truncateText(enquiry.details, 85))}
+            </button>
+        `;
+    }).join('');
+}
+
+function togglePastEnquirySelection(enquiryId) {
+    const exists = stagedLinkedEnquiryIds.includes(enquiryId);
+
+    if (exists) {
+        stagedLinkedEnquiryIds = stagedLinkedEnquiryIds.filter(function (id) { return id !== enquiryId; });
+    } else {
+        stagedLinkedEnquiryIds.push(enquiryId);
+    }
+
+    renderPastEnquiryLinks();
+}
+
+function renderLinkedEnquiriesSummary() {
+    const container = document.getElementById('linkedEnquiriesSummary');
+    if (!container || isManager()) {
+        return;
+    }
+
+    if (selectedLinkedEnquiryIds.length === 0) {
+        container.innerHTML = '<p class="muted-text">No previous enquiries linked.</p>';
+        return;
+    }
+
+    const linkedRows = selectedLinkedEnquiryIds
+        .map(function (linkedId) {
+            return enquiries.find(function (item) { return item.enquiryId === linkedId; });
+        })
+        .filter(Boolean);
+
+    container.innerHTML = linkedRows.map(function (enquiry) {
+        return `<p class="linked-enquiry-item"><strong>${enquiry.enquiryId}</strong>: ${escapeHtml(truncateText(enquiry.details, 80))}</p>`;
+    }).join('');
+}
+
+function getPastEnquiriesForCurrentStudent() {
+    return getRoleScopedEnquiries().filter(function (enquiry) {
+        return enquiry.status === 'Resolved' || enquiry.status === 'Canceled';
+    }).sort(function (a, b) {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+    });
 }
 
 function renderDashboardEnquiriesTable() {
@@ -733,6 +1001,60 @@ async function loadNotificationsConfig() {
     }
 }
 
+async function hydrateSupportDataState() {
+    try {
+        const alreadySeeded = localStorage.getItem(DATA_SEED_KEY) === DATA_SEED_VERSION;
+        if (alreadySeeded) {
+            enquiries = loadState(ENQUIRIES_KEY, defaultEnquiries).map(normalizeEnquiryRecord);
+            appointments = loadState(APPOINTMENTS_KEY, defaultAppointments);
+            invitations = loadState(INVITATIONS_KEY, defaultInvitations);
+            persistEnquiries();
+            return;
+        }
+
+        const response = await fetch(SUPPORT_DATA_FILE, { cache: 'no-store' });
+        if (!response.ok) {
+            enquiries = loadState(ENQUIRIES_KEY, defaultEnquiries).map(normalizeEnquiryRecord);
+            persistEnquiries();
+            return;
+        }
+
+        const payload = await response.json();
+        const nextEnquiries = Array.isArray(payload?.enquiries)
+            ? payload.enquiries.map(normalizeEnquiryRecord)
+            : structuredCloneSafe(defaultEnquiries).map(normalizeEnquiryRecord);
+        const nextAppointments = Array.isArray(payload?.appointments)
+            ? payload.appointments
+            : structuredCloneSafe(defaultAppointments);
+        const nextInvitations = Array.isArray(payload?.pendingAppointments)
+            ? payload.pendingAppointments
+            : structuredCloneSafe(defaultInvitations);
+
+        localStorage.setItem(ENQUIRIES_KEY, JSON.stringify(nextEnquiries));
+        localStorage.setItem(APPOINTMENTS_KEY, JSON.stringify(nextAppointments));
+        localStorage.setItem(INVITATIONS_KEY, JSON.stringify(nextInvitations));
+        localStorage.setItem(DATA_SEED_KEY, DATA_SEED_VERSION);
+
+        enquiries = nextEnquiries;
+        appointments = nextAppointments;
+        invitations = nextInvitations;
+    } catch (error) {
+        enquiries = loadState(ENQUIRIES_KEY, defaultEnquiries).map(normalizeEnquiryRecord);
+        appointments = loadState(APPOINTMENTS_KEY, defaultAppointments);
+        invitations = loadState(INVITATIONS_KEY, defaultInvitations);
+        persistEnquiries();
+    }
+}
+
+function normalizeEnquiryRecord(enquiry) {
+    return {
+        ...enquiry,
+        linkedPastEnquiryIds: Array.isArray(enquiry?.linkedPastEnquiryIds) ? enquiry.linkedPastEnquiryIds : [],
+        feedbackRating: typeof enquiry?.feedbackRating === 'number' ? enquiry.feedbackRating : null,
+        feedbackSentAt: enquiry?.feedbackSentAt || ''
+    };
+}
+
 function renderManagerDashboard() {
     renderManagerSummary();
     renderStaffKpiCards();
@@ -908,11 +1230,6 @@ function renderEnquiriesPageTable() {
     const dateKeyword = (document.getElementById('searchDate')?.value || '').trim();
 
     let roleRows = getRoleScopedEnquiries();
-    if (isManager() && !statusKeyword) {
-        roleRows = roleRows.filter(function (enquiry) {
-            return PENDING_ENQUIRY_STATES.includes(enquiry.status);
-        });
-    }
 
     const filtered = roleRows.filter(function (enquiry) {
         const matchDetails = !detailsKeyword || enquiry.details.toLowerCase().includes(detailsKeyword);
@@ -924,7 +1241,7 @@ function renderEnquiriesPageTable() {
     });
 
     if (filtered.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="7" class="empty-cell">No enquiries match your filters.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="9" class="empty-cell">No enquiries match your filters.</td></tr>';
         return;
     }
 
@@ -941,8 +1258,10 @@ function renderEnquiriesPageTable() {
         return `
             <tr>
                 <td>${enquiry.enquiryId}</td>
+                <td>${enquiry.studentID}</td>
                 <td>${escapeHtml(truncateText(enquiry.details, 80))}</td>
                 <td>${enquiry.category}</td>
+                <td>${enquiry.assignedStaff || '-'}</td>
                 <td><span class="status-pill ${statusToClass(enquiry.status)}">${enquiry.status}</span></td>
                 <td>${enquiry.response ? escapeHtml(truncateText(enquiry.response, 60)) : '-'}</td>
                 <td>${enquiry.createdAt}</td>
@@ -969,6 +1288,22 @@ function openEnquiryDetail(enquiryId) {
         return;
     }
 
+    const linkedRows = (enquiry.linkedPastEnquiryIds || [])
+        .map(function (linkedId) {
+            return enquiries.find(function (item) { return item.enquiryId === linkedId; });
+        })
+        .filter(Boolean);
+
+    const linkedMarkup = linkedRows.length === 0
+        ? '<p>No linked past enquiries.</p>'
+        : linkedRows.map(function (item) {
+            return `<p><strong>${item.enquiryId}</strong>: ${escapeHtml(truncateText(item.details, 100))}</p>`;
+        }).join('');
+
+    const feedbackLabel = enquiry.feedbackRating
+        ? `${enquiry.feedbackRating}/5${enquiry.feedbackSentAt ? ` on ${enquiry.feedbackSentAt}` : ''}`
+        : 'Not rated yet';
+
     modalState.enquiryId = enquiryId;
 
     body.innerHTML = `
@@ -992,6 +1327,14 @@ function openEnquiryDetail(enquiryId) {
         <div class="detail-block">
             <h3>Attachment</h3>
             <p>${enquiry.attachmentName || 'No attachment uploaded.'}</p>
+        </div>
+        <div class="detail-block">
+            <h3>Linked Past Enquiries</h3>
+            ${linkedMarkup}
+        </div>
+        <div class="detail-block">
+            <h3>Feedback</h3>
+            <p>${feedbackLabel}</p>
         </div>
         <div class="detail-actions">
             ${enquiry.linkedAppointmentId ? `<button type="button" class="btn btn-secondary" onclick="goToAppointment('${enquiry.linkedAppointmentId}')">Go To Appointment</button>` : ''}
@@ -1259,23 +1602,144 @@ function openBookingModal(invitationId) {
     const invitation = invitations.find(function (item) { return item.invitationId === invitationId; });
     const modal = document.getElementById('bookingModal');
     const title = document.getElementById('bookingTitle');
-    const slotList = document.getElementById('bookingSlots');
+    const monthLabel = document.getElementById('bookingMonthLabel');
+    const prevMonthBtn = document.getElementById('bookingPrevMonth');
+    const nextMonthBtn = document.getElementById('bookingNextMonth');
 
-    if (!invitation || !modal || !title || !slotList) {
+    if (!invitation || !modal || !title || !monthLabel || !prevMonthBtn || !nextMonthBtn) {
         return;
     }
 
     activeInvitationId = invitationId;
+    const availableDates = invitation.availableSlots.map(function (slot) { return slot.date; }).sort();
+    const firstDate = availableDates[0] || getTodayISO();
+    const firstDateObj = new Date(`${firstDate}T00:00:00`);
+
+    bookingCalendarView = {
+        invitationId,
+        year: firstDateObj.getFullYear(),
+        month: firstDateObj.getMonth(),
+        selectedDay: ''
+    };
+
     title.textContent = `Book with ${invitation.staffName}`;
 
-    slotList.innerHTML = invitation.availableSlots.map(function (slot) {
+    prevMonthBtn.onclick = function () {
+        bookingCalendarView.month -= 1;
+        if (bookingCalendarView.month < 0) {
+            bookingCalendarView.month = 11;
+            bookingCalendarView.year -= 1;
+        }
+        renderBookingCalendar();
+    };
+
+    nextMonthBtn.onclick = function () {
+        bookingCalendarView.month += 1;
+        if (bookingCalendarView.month > 11) {
+            bookingCalendarView.month = 0;
+            bookingCalendarView.year += 1;
+        }
+        renderBookingCalendar();
+    };
+
+    const confirmBtn = document.getElementById('confirmBookingBtn');
+    if (confirmBtn) {
+        confirmBtn.onclick = confirmBookingFromModal;
+    }
+
+    renderBookingCalendar();
+    renderBookingSlotsForDay();
+    modal.classList.add('show');
+}
+
+function renderBookingCalendar() {
+    const calendar = document.getElementById('bookingCalendar');
+    const monthLabel = document.getElementById('bookingMonthLabel');
+    const invitation = invitations.find(function (item) { return item.invitationId === bookingCalendarView.invitationId; });
+
+    if (!calendar || !monthLabel || !invitation) {
+        return;
+    }
+
+    const monthStart = new Date(bookingCalendarView.year, bookingCalendarView.month, 1);
+    const monthEnd = new Date(bookingCalendarView.year, bookingCalendarView.month + 1, 0);
+    const daysInMonth = monthEnd.getDate();
+    const firstWeekday = monthStart.getDay();
+
+    monthLabel.textContent = monthStart.toLocaleString('en-AU', { month: 'long', year: 'numeric' });
+
+    const availableSet = new Set(
+        invitation.availableSlots
+            .filter(function (slot) { return slot.available; })
+            .map(function (slot) { return slot.date; })
+    );
+
+    const cells = [];
+    const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    weekdayLabels.forEach(function (label) {
+        cells.push(`<div class="booking-weekday">${label}</div>`);
+    });
+
+    for (let i = 0; i < firstWeekday; i += 1) {
+        cells.push('<div class="calendar-day placeholder"></div>');
+    }
+
+    for (let day = 1; day <= daysInMonth; day += 1) {
+        const iso = `${bookingCalendarView.year}-${String(bookingCalendarView.month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const available = availableSet.has(iso);
+        const selected = bookingCalendarView.selectedDay === iso;
+        const classes = ['calendar-day'];
+        if (available) {
+            classes.push('available');
+        } else {
+            classes.push('unavailable');
+        }
+        if (selected) {
+            classes.push('selected');
+        }
+
+        const clickAction = available ? `onclick="selectBookingDay('${iso}')"` : '';
+        cells.push(`<button type="button" class="${classes.join(' ')}" ${clickAction}>${day}</button>`);
+    }
+
+    calendar.innerHTML = cells.join('');
+}
+
+function selectBookingDay(isoDate) {
+    bookingCalendarView.selectedDay = isoDate;
+    renderBookingCalendar();
+    renderBookingSlotsForDay();
+}
+
+function renderBookingSlotsForDay() {
+    const slotList = document.getElementById('bookingSlots');
+    const invitation = invitations.find(function (item) { return item.invitationId === bookingCalendarView.invitationId; });
+
+    if (!slotList || !invitation) {
+        return;
+    }
+
+    if (!bookingCalendarView.selectedDay) {
+        slotList.innerHTML = '<p class="muted-text">Select an available day to see available time slots.</p>';
+        return;
+    }
+
+    const slots = invitation.availableSlots.filter(function (slot) {
+        return slot.date === bookingCalendarView.selectedDay;
+    });
+
+    if (slots.length === 0) {
+        slotList.innerHTML = '<p class="muted-text">No slots found for this day.</p>';
+        return;
+    }
+
+    slotList.innerHTML = slots.map(function (slot) {
         const disabledText = slot.available ? '' : 'disabled';
         const availabilityClass = slot.available ? 'slot-btn available' : 'slot-btn unavailable';
-        const label = `${slot.date} ${slot.time}`;
 
         return `
             <button type="button" class="${availabilityClass}" data-date="${slot.date}" data-time="${slot.time}" ${disabledText}>
-                ${label} ${slot.available ? '(Available)' : '(Unavailable)'}
+                ${slot.time} ${slot.available ? '(Available)' : '(Unavailable)'}
             </button>
         `;
     }).join('');
@@ -1286,13 +1750,6 @@ function openBookingModal(invitationId) {
             button.classList.add('selected');
         });
     });
-
-    const confirmBtn = document.getElementById('confirmBookingBtn');
-    if (confirmBtn) {
-        confirmBtn.onclick = confirmBookingFromModal;
-    }
-
-    modal.classList.add('show');
 }
 
 function closeBookingModal() {
@@ -1302,6 +1759,12 @@ function closeBookingModal() {
     }
 
     activeInvitationId = '';
+    bookingCalendarView = {
+        invitationId: '',
+        year: 0,
+        month: 0,
+        selectedDay: ''
+    };
 }
 
 function confirmBookingFromModal() {
@@ -1355,6 +1818,90 @@ function confirmBookingFromModal() {
 function initializeSettingsPage() {
     fillStudentProfile();
     bindSettingsActions();
+}
+
+function initializeFeedbackPage() {
+    if (isManager()) {
+        window.location.href = 'manager-dashboard.html';
+        return;
+    }
+
+    renderFeedbackTable();
+}
+
+function renderFeedbackTable() {
+    const body = document.getElementById('feedbackTableBody');
+    if (!body) {
+        return;
+    }
+
+    const resolvedRows = getRoleScopedEnquiries()
+        .filter(function (enquiry) { return enquiry.status === 'Resolved'; })
+        .sort(function (a, b) {
+            return new Date(b.resolvedAt || b.createdAt) - new Date(a.resolvedAt || a.createdAt);
+        });
+
+    if (resolvedRows.length === 0) {
+        body.innerHTML = '<tr><td colspan="6" class="empty-cell">No resolved enquiries available for feedback.</td></tr>';
+        return;
+    }
+
+    body.innerHTML = resolvedRows.map(function (enquiry) {
+        const hasRating = typeof enquiry.feedbackRating === 'number' && enquiry.feedbackRating > 0;
+        const ratingOptions = [1, 2, 3, 4, 5].map(function (rating) {
+            const selected = enquiry.feedbackRating === rating ? 'selected' : '';
+            return `<option value="${rating}" ${selected}>${rating} / 5</option>`;
+        }).join('');
+
+        const actionCell = hasRating
+            ? `<span class="status-pill resolved">Feedback sent (${enquiry.feedbackRating}/5)</span>`
+            : `
+                <div class="feedback-action-wrap">
+                    <select id="feedbackRating-${enquiry.enquiryId}" class="feedback-rating-select">
+                        <option value="">Choose rating</option>
+                        ${ratingOptions}
+                    </select>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="sendFeedbackRating('${enquiry.enquiryId}')">Send Rating</button>
+                </div>
+            `;
+
+        const status = hasRating
+            ? `Sent ${enquiry.feedbackSentAt ? `on ${enquiry.feedbackSentAt}` : ''}`.trim()
+            : 'Awaiting feedback';
+
+        return `
+            <tr>
+                <td>${enquiry.enquiryId}</td>
+                <td>${escapeHtml(truncateText(enquiry.details, 85))}</td>
+                <td>${enquiry.resolvedAt || '-'}</td>
+                <td>${enquiry.assignedStaff || '-'}</td>
+                <td>${hasRating ? `${enquiry.feedbackRating}/5` : '-'}</td>
+                <td>
+                    ${actionCell}
+                    <p class="feedback-status-text">${status}</p>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function sendFeedbackRating(enquiryId) {
+    const enquiry = enquiries.find(function (item) { return item.enquiryId === enquiryId; });
+    if (!enquiry || enquiry.status !== 'Resolved') {
+        return;
+    }
+
+    const select = document.getElementById(`feedbackRating-${enquiryId}`);
+    const rating = Number(select?.value || 0);
+    if (!rating || rating < 1 || rating > 5) {
+        alert('Please choose a rating from 1 to 5.');
+        return;
+    }
+
+    enquiry.feedbackRating = rating;
+    enquiry.feedbackSentAt = getTodayISO();
+    persistEnquiries();
+    renderFeedbackTable();
 }
 
 function fillStudentProfile() {
@@ -1858,7 +2405,10 @@ window.openEnquiryDetail = openEnquiryDetail;
 window.deleteEnquiry = deleteEnquiry;
 window.goToAppointment = goToAppointment;
 window.openBookingModal = openBookingModal;
+window.selectBookingDay = selectBookingDay;
 window.openAppointmentDetail = openAppointmentDetail;
 window.openStaffKpiDetail = openStaffKpiDetail;
+window.togglePastEnquirySelection = togglePastEnquirySelection;
+window.sendFeedbackRating = sendFeedbackRating;
 window.openStaffDetailModal = openStaffDetailModal;
 window.renderManagerDashboardPage = renderManagerDashboardPage;

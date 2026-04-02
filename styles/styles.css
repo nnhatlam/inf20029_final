@@ -230,7 +230,8 @@ h2 {
 .dashboard-section,
 .enquiries-page-section,
 .appointments-section,
-.settings-section {
+.settings-section,
+.feedback-section {
     display: grid;
     gap: 22px;
 }
@@ -457,6 +458,56 @@ button:disabled {
 .chip-row {
     display: flex;
     flex-wrap: wrap;
+    gap: 8px;
+}
+
+.past-enquiry-link-list {
+    display: grid;
+    gap: 8px;
+    max-height: 320px;
+    overflow-y: auto;
+    margin-top: 8px;
+}
+
+.past-enquiry-link-btn {
+    border: 1px solid #d8d2df;
+    background: #f8f6fb;
+    color: #2d211c;
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: left;
+    font: inherit;
+    font-size: 0.84rem;
+    cursor: pointer;
+}
+
+.past-enquiry-link-btn:hover {
+    background: #f1edf7;
+}
+
+.past-enquiry-link-btn.selected {
+    border-color: #b52635;
+    background: #ffeef1;
+}
+
+.linked-enquiries-summary {
+    display: grid;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.linked-enquiry-item {
+    background: #f8f6fb;
+    border: 1px solid #dfd8e7;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.83rem;
+    color: #372b2d;
+}
+
+.link-enquiry-actions {
+    display: flex;
+    justify-content: flex-end;
     gap: 8px;
 }
 
@@ -741,6 +792,74 @@ button:disabled {
     gap: 10px;
 }
 
+.booking-calendar-head {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+}
+
+.booking-month-label {
+    text-align: center;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.booking-calendar-grid {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.booking-weekday {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #5f5350;
+    text-align: center;
+    font-weight: 700;
+}
+
+.calendar-day {
+    border: 1px solid #dcd6e3;
+    border-radius: 10px;
+    min-height: 40px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.calendar-day.placeholder {
+    border: none;
+    background: transparent;
+    cursor: default;
+}
+
+.calendar-day.available {
+    background: #eaf7ed;
+    color: #1f5e2f;
+    border-color: #b9dfc2;
+}
+
+.calendar-day.unavailable {
+    background: #f5f5f5;
+    color: #9b8f93;
+    cursor: default;
+}
+
+.calendar-day.selected {
+    border-color: #1f5e2f;
+    box-shadow: 0 0 0 2px rgba(31, 94, 47, 0.2);
+}
+
+.booking-slot-title {
+    margin-top: 14px;
+    color: #3d2f2b;
+    font-size: 0.95rem;
+}
+
 .slot-btn {
     border-radius: 10px;
     border: 1px solid transparent;
@@ -774,6 +893,27 @@ button:disabled {
 
 .modal-footer-actions {
     margin-top: 16px;
+}
+
+.feedback-action-wrap {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.feedback-rating-select {
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 7px 9px;
+    font: inherit;
+    background: #fff;
+}
+
+.feedback-status-text {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: #5e514d;
 }
 
 /* Settings */
@@ -1114,6 +1254,14 @@ button:disabled {
 
     .booking-slot-grid {
         grid-template-columns: 1fr;
+    }
+
+    .booking-calendar-head {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-month-label {
+        order: -1;
     }
 
     .settings-actions {

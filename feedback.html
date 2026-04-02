@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Student Support System</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="feedback-section student-only">
+                <h1>Resolved Enquiries Feedback</h1>
+
+                <article class="card">
+                    <div class="card-header">
+                        <h2>Send Ratings</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="field-note">Rate each resolved enquiry to help staff improve support quality.</p>
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Enquiry ID</th>
+                                        <th>Details</th>
+                                        <th>Resolved At</th>
+                                        <th>Staff</th>
+                                        <th>Rating</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="feedbackTableBody">
+                                    <tr>
+                                        <td colspan="6" class="empty-cell">No resolved enquiries available for feedback.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </article>
+            </section>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="scripts/scripts.js"></script>
+</body>
+</html>

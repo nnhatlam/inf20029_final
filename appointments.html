@@ -133,7 +133,14 @@
         <div class="modal-content">
             <button id="bookingClose" class="close" type="button" aria-label="Close booking modal">&times;</button>
             <h2 id="bookingTitle">Book Appointment</h2>
-            <p class="field-note">Select one available schedule. Unavailable slots are disabled.</p>
+            <p class="field-note">Pick an available day from the month view, then choose a time slot for that day.</p>
+            <div class="booking-calendar-head">
+                <button id="bookingPrevMonth" type="button" class="btn btn-secondary btn-sm">Previous</button>
+                <p id="bookingMonthLabel" class="booking-month-label"></p>
+                <button id="bookingNextMonth" type="button" class="btn btn-secondary btn-sm">Next</button>
+            </div>
+            <div id="bookingCalendar" class="booking-calendar-grid"></div>
+            <h3 class="booking-slot-title">Available Time Slots</h3>
             <div id="bookingSlots" class="booking-slot-grid"></div>
             <div class="modal-footer-actions">
                 <button id="confirmBookingBtn" type="button" class="btn btn-primary">Confirm Booking</button>
