@@ -45,6 +45,7 @@ const INVITATIONS_KEY = 'sss_invitations';
 const PREFERENCES_KEY = 'sss_preferences';
 const NOTIFICATIONS_FILE = 'data/notifications.json';
 const SUPPORT_DATA_FILE = 'data/support-data.json';
+const STUDENTS_FILE = 'data/students.json';
 const DATA_SEED_KEY = 'sss_seed_version';
 const DATA_SEED_VERSION = '2026-04-02-v1';
 
@@ -298,6 +299,7 @@ const defaultPreferences = {
 let enquiries = loadState(ENQUIRIES_KEY, defaultEnquiries);
 let appointments = loadState(APPOINTMENTS_KEY, defaultAppointments);
 let invitations = loadState(INVITATIONS_KEY, defaultInvitations);
+let studentRecords = [];
 let customNotifications = [];
 let selectedDashboardCategory = '';
 let activeInvitationId = '';
@@ -318,6 +320,7 @@ const modalState = {
 document.addEventListener('DOMContentLoaded', async function () {
     await hydrateSupportDataState();
     await loadNotificationsConfig();
+    await loadStudentRecords();
 
     if (document.getElementById('navbar-container')) {
         loadComponent('components/navbar.html', 'navbar-container');
@@ -328,7 +331,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     const currentPage = window.location.pathname.split('/').pop();
-    const protectedPages = ['dashboard.html', 'enquiries.html', 'appointments.html', 'settings.html', 'manager-dashboard.html', 'feedback.html'];
+    const protectedPages = ['dashboard.html', 'enquiries.html', 'appointments.html', 'settings.html', 'manager-dashboard.html', 'manager-students.html', 'feedback.html'];
 
     if (protectedPages.includes(currentPage) && !currentUser) {
         window.location.href = 'index.html';
@@ -345,6 +348,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         return;
     }
 
+    if (currentPage === 'manager-students.html' && !isManager()) {
+        window.location.href = 'dashboard.html';
+        return;
+    }
+
     applyRoleVisibility();
     setupLogin();
 
@@ -354,6 +362,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         } else {
             initializeDashboard();
         }
+    }
+
+    if (document.querySelector('.manager-students-section')) {
+        initializeManagerStudentsPage();
     }
 
     if (document.querySelector('.enquiries-page-section')) {
@@ -998,6 +1010,21 @@ async function loadNotificationsConfig() {
             .filter(function (message) { return message.length > 0; });
     } catch (error) {
         customNotifications = [];
+    }
+}
+
+async function loadStudentRecords() {
+    try {
+        const response = await fetch(STUDENTS_FILE, { cache: 'no-store' });
+        if (!response.ok) {
+            studentRecords = [];
+            return;
+        }
+
+        const payload = await response.json();
+        studentRecords = Array.isArray(payload) ? payload : [];
+    } catch (error) {
+        studentRecords = [];
     }
 }
 
@@ -1829,6 +1856,143 @@ function initializeFeedbackPage() {
     renderFeedbackTable();
 }
 
+function initializeManagerStudentsPage() {
+    if (!isManager()) {
+        window.location.href = 'dashboard.html';
+        return;
+    }
+
+    const searchInput = document.getElementById('studentSearchInput');
+    const clearBtn = document.getElementById('studentSearchClear');
+    const tableBody = document.getElementById('studentTableBody');
+    const modal = document.getElementById('studentDetailModal');
+    const closeBtn = document.getElementById('studentDetailClose');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', renderManagerStudentTable);
+    }
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            if (searchInput) {
+                searchInput.value = '';
+            }
+            renderManagerStudentTable();
+            if (searchInput) {
+                searchInput.focus();
+            }
+        });
+    }
+
+    if (tableBody) {
+        tableBody.addEventListener('click', function (event) {
+            const row = event.target.closest('tr[data-student-id]');
+            if (!row) {
+                return;
+            }
+
+            const studentId = row.getAttribute('data-student-id') || '';
+            if (studentId) {
+                openStudentDetailModal(studentId);
+            }
+        });
+    }
+
+    if (modal) {
+        modal.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                closeStudentDetailModal();
+            }
+        });
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeStudentDetailModal);
+    }
+
+    renderManagerStudentTable();
+}
+
+function renderManagerStudentTable() {
+    const tableBody = document.getElementById('studentTableBody');
+    const countEl = document.getElementById('studentResultCount');
+
+    if (!tableBody) {
+        return;
+    }
+
+    const keyword = (document.getElementById('studentSearchInput')?.value || '').trim().toLowerCase();
+
+    const filtered = studentRecords.filter(function (student) {
+        const studentId = String(student.studentID || '').toLowerCase();
+        const studentName = String(student.studentName || '').toLowerCase();
+        return !keyword || studentId.includes(keyword) || studentName.includes(keyword);
+    }).sort(function (a, b) {
+        return String(a.studentName || '').localeCompare(String(b.studentName || ''));
+    });
+
+    if (countEl) {
+        countEl.textContent = `${filtered.length} student${filtered.length === 1 ? '' : 's'} found`;
+    }
+
+    if (filtered.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="empty-cell">No students match your search.</td></tr>';
+        return;
+    }
+
+    tableBody.innerHTML = filtered.map(function (student) {
+        return `
+            <tr class="student-row" data-student-id="${student.studentID}">
+                <td>${student.studentID}</td>
+                <td>${escapeHtml(student.studentName)}</td>
+                <td>${escapeHtml(student.Major || student.major || '-')}</td>
+                <td>${student.DOB || student.dob || '-'}</td>
+                <td>${escapeHtml(student.Email || student.email || '-')}</td>
+                <td>${escapeHtml(student.Phone || student.phone || '-')}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function openStudentDetailModal(studentId) {
+    const modal = document.getElementById('studentDetailModal');
+    const body = document.getElementById('studentDetailBody');
+    const title = document.getElementById('studentDetailName');
+
+    if (!modal || !body || !title) {
+        return;
+    }
+
+    const student = studentRecords.find(function (item) {
+        return item.studentID === studentId;
+    });
+
+    if (!student) {
+        return;
+    }
+
+    title.textContent = student.studentName;
+    body.innerHTML = `
+        <div class="detail-grid">
+            <p><strong>Student ID:</strong> ${student.studentID}</p>
+            <p><strong>Name:</strong> ${escapeHtml(student.studentName)}</p>
+            <p><strong>Major:</strong> ${escapeHtml(student.Major || student.major || '-')}</p>
+            <p><strong>DOB:</strong> ${student.DOB || student.dob || '-'}</p>
+            <p><strong>Email:</strong> ${escapeHtml(student.Email || student.email || '-')}</p>
+            <p><strong>Phone:</strong> ${escapeHtml(student.Phone || student.phone || '-')}</p>
+        </div>
+    `;
+
+    modal.classList.add('show');
+}
+
+function closeStudentDetailModal() {
+    const modal = document.getElementById('studentDetailModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
 function renderFeedbackTable() {
     const body = document.getElementById('feedbackTableBody');
     if (!body) {
@@ -2412,3 +2576,4 @@ window.togglePastEnquirySelection = togglePastEnquirySelection;
 window.sendFeedbackRating = sendFeedbackRating;
 window.openStaffDetailModal = openStaffDetailModal;
 window.renderManagerDashboardPage = renderManagerDashboardPage;
+window.openStudentDetailModal = openStudentDetailModal;
