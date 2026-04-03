@@ -14,6 +14,24 @@
             <section class="appointments-section">
                 <h1>Appointments</h1>
 
+                <article class="card">
+                    <div class="card-header">
+                        <h2>Search Appointments</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="appointment-search-row">
+                            <div class="form-group appointment-search-field">
+                                <label for="appointmentSearchInput">Search Keyword</label>
+                                <input id="appointmentSearchInput" type="text" placeholder="Appointment ID, enquiry ID, staff, date/time, or location">
+                            </div>
+                            <div class="appointment-search-actions">
+                                <button id="appointmentSearchClear" type="button" class="btn btn-secondary">Clear</button>
+                            </div>
+                        </div>
+                        <p id="appointmentSearchResultCount" class="field-note">Showing all appointments</p>
+                    </div>
+                </article>
+
                 <article class="card manager-only" id="managerRequestCard" hidden>
                     <div class="card-header">
                         <h2>Request Appointment (Manager)</h2>

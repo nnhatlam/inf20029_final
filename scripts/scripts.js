@@ -1401,10 +1401,30 @@ function goToAppointment(appointmentId) {
 function initializeAppointmentsPage() {
     bindAppointmentModalEvents();
     bindManagerRequestActions();
+    bindAppointmentSearchActions();
     renderInvitationsTable();
     renderAppointmentsTables();
     renderManagerRequestEnquiryOptions();
     maybeOpenAppointmentFromQuery();
+}
+
+function bindAppointmentSearchActions() {
+    const input = document.getElementById('appointmentSearchInput');
+    const clearBtn = document.getElementById('appointmentSearchClear');
+
+    if (input) {
+        input.addEventListener('input', renderAppointmentsTables);
+    }
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            if (input) {
+                input.value = '';
+                input.focus();
+            }
+            renderAppointmentsTables();
+        });
+    }
 }
 
 function bindAppointmentModalEvents() {
@@ -1541,24 +1561,55 @@ function renderInvitationsTable() {
 }
 
 function renderAppointmentsTables() {
-    renderAppointmentTable('upcomingAppointmentBody', 'Upcoming', true);
-    renderAppointmentTable('pastAppointmentBody', 'Past', false);
+    const keyword = (document.getElementById('appointmentSearchInput')?.value || '').trim().toLowerCase();
+    const scopedRows = getRoleScopedAppointments();
+    const filteredRows = scopedRows.filter(function (appointment) {
+        return !keyword || appointmentMatchesKeyword(appointment, keyword);
+    });
+
+    const countEl = document.getElementById('appointmentSearchResultCount');
+    if (countEl) {
+        if (!keyword) {
+            countEl.textContent = `Showing all ${scopedRows.length} appointment${scopedRows.length === 1 ? '' : 's'}`;
+        } else {
+            countEl.textContent = `Showing ${filteredRows.length} of ${scopedRows.length} appointment${scopedRows.length === 1 ? '' : 's'}`;
+        }
+    }
+
+    renderAppointmentTable('upcomingAppointmentBody', 'Upcoming', true, filteredRows, !!keyword);
+    renderAppointmentTable('pastAppointmentBody', 'Past', false, filteredRows, !!keyword);
 }
 
-function renderAppointmentTable(containerId, status, withAction) {
+function appointmentMatchesKeyword(appointment, keyword) {
+    const searchable = [
+        appointment.appointmentId,
+        appointment.enquiryId,
+        appointment.staffName,
+        appointment.dateTime,
+        appointment.location,
+        appointment.status
+    ].join(' ').toLowerCase();
+
+    return searchable.includes(keyword);
+}
+
+function renderAppointmentTable(containerId, status, withAction, rowsSource, hasSearchKeyword) {
     const body = document.getElementById(containerId);
     if (!body) {
         return;
     }
 
-    const rows = getRoleScopedAppointments().filter(function (appointment) {
+    const rows = rowsSource.filter(function (appointment) {
         return appointment.status === status;
     }).sort(function (a, b) {
         return new Date(a.dateTime.replace(' ', 'T')) - new Date(b.dateTime.replace(' ', 'T'));
     });
 
     if (rows.length === 0) {
-        body.innerHTML = `<tr><td colspan="6" class="empty-cell">No ${status.toLowerCase()} appointments.</td></tr>`;
+        const message = hasSearchKeyword
+            ? `No ${status.toLowerCase()} appointments match your search.`
+            : `No ${status.toLowerCase()} appointments.`;
+        body.innerHTML = `<tr><td colspan="6" class="empty-cell">${message}</td></tr>`;
         return;
     }
 
