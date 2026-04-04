@@ -139,15 +139,15 @@
         </div>
     </main>
 
-    <div id="appointmentDetailModal" class="modal">
+    <div id="appointmentDetailModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="appointmentDetailTitle" aria-hidden="true" hidden>
         <div class="modal-content">
             <button id="appointmentDetailClose" class="close" type="button" aria-label="Close appointment detail">&times;</button>
-            <h2>Appointment Detail</h2>
+            <h2 id="appointmentDetailTitle">Appointment Detail</h2>
             <div id="appointmentDetailBody"></div>
         </div>
     </div>
 
-    <div id="bookingModal" class="modal">
+    <div id="bookingModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="bookingTitle" aria-hidden="true" hidden>
         <div class="modal-content">
             <button id="bookingClose" class="close" type="button" aria-label="Close booking modal">&times;</button>
             <h2 id="bookingTitle">Book Appointment</h2>

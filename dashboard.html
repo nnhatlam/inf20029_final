@@ -17,7 +17,7 @@
                         <h1 id="dashboardTitle">Submit Enquiry Dashboard</h1>
                         <p id="roleGreeting" class="role-greeting">Hello Student</p>
                     </div>
-                    <button id="notificationButton" class="notification-icon-btn" aria-label="Open notifications" type="button">
+                    <button id="notificationButton" class="notification-icon-btn" aria-label="Open notifications" aria-expanded="false" aria-controls="notificationOverlay" type="button">
                         <span class="notification-icon" aria-hidden="true">&#128276;</span>
                         <span id="notificationCount" class="notification-count">0</span>
                     </button>
@@ -40,7 +40,7 @@
                     </div>
                 </article>
 
-                <div id="notificationOverlay" class="notification-overlay" aria-hidden="true">
+                <div id="notificationOverlay" class="notification-overlay" aria-hidden="true" hidden>
                     <div class="notification-panel card" role="dialog" aria-modal="true" aria-label="Notifications panel">
                         <div class="card-header notification-panel-header">
                             <h2>Notifications</h2>
@@ -140,18 +140,18 @@
         </div>
     </main>
 
-    <div id="staffKpiModal" class="modal manager-only" hidden>
+    <div id="staffKpiModal" class="modal manager-only" role="dialog" aria-modal="true" aria-labelledby="staffKpiModalTitle" aria-hidden="true" hidden>
         <div class="modal-content">
             <button id="staffKpiClose" class="close" type="button" aria-label="Close staff performance detail">&times;</button>
-            <h2>Staff Performance Detail</h2>
+            <h2 id="staffKpiModalTitle">Staff Performance Detail</h2>
             <div id="staffKpiDetailBody"></div>
         </div>
     </div>
 
-    <div id="previousEnquiryModal" class="modal student-only" aria-hidden="true">
+    <div id="previousEnquiryModal" class="modal student-only" role="dialog" aria-modal="true" aria-labelledby="previousEnquiryModalTitle" aria-hidden="true" hidden>
         <div class="modal-content">
             <button id="previousEnquiryClose" class="close" type="button" aria-label="Close previous enquiry selector">&times;</button>
-            <h2>Link Previous Enquiries</h2>
+            <h2 id="previousEnquiryModalTitle">Link Previous Enquiries</h2>
             <p class="field-note">Choose one or more previous resolved or canceled enquiries.</p>
             <div id="pastEnquiryLinks" class="past-enquiry-link-list"></div>
             <div class="modal-footer-actions link-enquiry-actions">
@@ -161,9 +161,9 @@
         </div>
     </div>
 
-    <button id="chatbotFab" class="chatbot-fab student-only" type="button" aria-label="Open AI chatbot">AI Chat</button>
+    <button id="chatbotFab" class="chatbot-fab student-only" type="button" aria-label="Open AI chatbot" aria-expanded="false" aria-controls="chatbotPanel">AI Chat</button>
 
-    <section id="chatbotPanel" class="chatbot-panel student-only" aria-label="AI chatbot panel" aria-live="polite">
+    <section id="chatbotPanel" class="chatbot-panel student-only" role="dialog" aria-modal="false" aria-label="AI chatbot panel" aria-live="polite" aria-hidden="true" hidden>
         <div class="chatbot-header">
             <h3>Student AI Helper</h3>
             <button id="chatbotClose" class="chatbot-close" type="button" aria-label="Close AI chatbot">&times;</button>

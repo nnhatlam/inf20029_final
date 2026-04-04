@@ -317,7 +317,134 @@ const modalState = {
     appointmentId: ''
 };
 
+let activeDialogMeta = null;
+
+function getFocusableElements(container) {
+    if (!container) {
+        return [];
+    }
+
+    const selectors = [
+        'a[href]',
+        'button:not([disabled])',
+        'input:not([disabled]):not([type="hidden"])',
+        'select:not([disabled])',
+        'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])'
+    ];
+
+    return Array.from(container.querySelectorAll(selectors.join(','))).filter(function (element) {
+        return element.offsetParent !== null || element === document.activeElement;
+    });
+}
+
+function openDialog(modal, options) {
+    if (!modal) {
+        return;
+    }
+
+    const config = options || {};
+    const trigger = config.trigger || document.activeElement;
+    const initialFocusSelector = config.initialFocusSelector || '';
+
+    modal.hidden = false;
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
+
+    activeDialogMeta = {
+        modal,
+        trigger: trigger instanceof HTMLElement ? trigger : null
+    };
+
+    const initial = initialFocusSelector ? modal.querySelector(initialFocusSelector) : null;
+    const focusTargets = getFocusableElements(modal);
+    const focusEl = initial || focusTargets[0];
+    if (focusEl) {
+        focusEl.focus();
+    }
+}
+
+function closeDialog(modal, options) {
+    if (!modal) {
+        return;
+    }
+
+    const config = options || {};
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.hidden = true;
+
+    if (activeDialogMeta && activeDialogMeta.modal === modal) {
+        const trigger = activeDialogMeta.trigger;
+        activeDialogMeta = null;
+        if (config.returnFocus !== false && trigger && typeof trigger.focus === 'function') {
+            trigger.focus();
+        }
+    }
+}
+
+function handleGlobalAccessibilityShortcuts(event) {
+    if (event.key === 'Tab' && activeDialogMeta && activeDialogMeta.modal?.classList.contains('show')) {
+        const focusables = getFocusableElements(activeDialogMeta.modal);
+        if (focusables.length === 0) {
+            return;
+        }
+
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+            return;
+        }
+        if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+            return;
+        }
+    }
+
+    if (event.key !== 'Escape') {
+        return;
+    }
+
+    const navbarMenu = document.querySelector('.navbar-menu');
+    const navbarToggle = document.getElementById('navbarToggle');
+    if (navbarMenu && navbarMenu.classList.contains('active')) {
+        navbarMenu.classList.remove('active');
+        if (navbarToggle) {
+            navbarToggle.setAttribute('aria-expanded', 'false');
+            navbarToggle.focus();
+        }
+    }
+
+    const openDialogs = Array.from(document.querySelectorAll('.modal.show, .notification-overlay.show'));
+    if (openDialogs.length > 0) {
+        const topDialog = openDialogs[openDialogs.length - 1];
+        closeDialog(topDialog);
+
+        const notificationButton = document.getElementById('notificationButton');
+        if (topDialog.id === 'notificationOverlay' && notificationButton) {
+            notificationButton.setAttribute('aria-expanded', 'false');
+        }
+    }
+
+    const panel = document.getElementById('chatbotPanel');
+    const fab = document.getElementById('chatbotFab');
+    if (panel && panel.classList.contains('show')) {
+        panel.classList.remove('show');
+        panel.hidden = true;
+        panel.setAttribute('aria-hidden', 'true');
+        if (fab) {
+            fab.setAttribute('aria-expanded', 'false');
+            fab.focus();
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async function () {
+    document.addEventListener('keydown', handleGlobalAccessibilityShortcuts);
+
     await hydrateSupportDataState();
     await loadNotificationsConfig();
     await loadStudentRecords();
@@ -412,8 +539,37 @@ function setupNavbar() {
     const navbarMenu = document.querySelector('.navbar-menu');
 
     if (navbarToggle && navbarMenu) {
+        navbarToggle.setAttribute('aria-expanded', 'false');
+
+        function closeNavbarMenu() {
+            navbarMenu.classList.remove('active');
+            navbarToggle.setAttribute('aria-expanded', 'false');
+        }
+
         navbarToggle.addEventListener('click', function () {
-            navbarMenu.classList.toggle('active');
+            const expanded = navbarMenu.classList.toggle('active');
+            navbarToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!navbarMenu.classList.contains('active')) {
+                return;
+            }
+
+            const clickInsideMenu = navbarMenu.contains(event.target);
+            const clickToggle = navbarToggle.contains(event.target);
+            if (!clickInsideMenu && !clickToggle) {
+                closeNavbarMenu();
+            }
+        });
+
+        navbarMenu.querySelectorAll('a').forEach(function (linkEl) {
+            linkEl.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    closeNavbarMenu();
+                    navbarToggle.focus();
+                }
+            });
         });
     }
 
@@ -431,6 +587,9 @@ function setupNavbar() {
         link.addEventListener('click', function () {
             if (navbarMenu) {
                 navbarMenu.classList.remove('active');
+                if (navbarToggle) {
+                    navbarToggle.setAttribute('aria-expanded', 'false');
+                }
             }
         });
     });
@@ -557,20 +716,26 @@ function bindDashboardActions() {
 
     if (notificationButton && notificationOverlay) {
         notificationButton.addEventListener('click', function () {
-            notificationOverlay.classList.add('show');
+            notificationButton.setAttribute('aria-expanded', 'true');
+            openDialog(notificationOverlay, {
+                trigger: notificationButton,
+                initialFocusSelector: '#notificationClose'
+            });
         });
     }
 
     if (notificationClose && notificationOverlay) {
         notificationClose.addEventListener('click', function () {
-            notificationOverlay.classList.remove('show');
+            notificationButton?.setAttribute('aria-expanded', 'false');
+            closeDialog(notificationOverlay);
         });
     }
 
     if (notificationOverlay) {
         notificationOverlay.addEventListener('click', function (event) {
             if (event.target === notificationOverlay) {
-                notificationOverlay.classList.remove('show');
+                notificationButton?.setAttribute('aria-expanded', 'false');
+                closeDialog(notificationOverlay);
             }
         });
     }
@@ -580,12 +745,12 @@ function bindDashboardActions() {
 
     if (staffKpiClose && staffKpiModal) {
         staffKpiClose.addEventListener('click', function () {
-            staffKpiModal.classList.remove('show');
+            closeDialog(staffKpiModal);
         });
 
         staffKpiModal.addEventListener('click', function (event) {
             if (event.target === staffKpiModal) {
-                staffKpiModal.classList.remove('show');
+                closeDialog(staffKpiModal);
             }
         });
     }
@@ -694,7 +859,10 @@ function openPreviousEnquiryModal() {
 
     stagedLinkedEnquiryIds = [...selectedLinkedEnquiryIds];
     renderPastEnquiryLinks();
-    modal.classList.add('show');
+    openDialog(modal, {
+        trigger: document.getElementById('openPreviousEnquiriesBtn'),
+        initialFocusSelector: '#previousEnquiryClose'
+    });
 }
 
 function closePreviousEnquiryModal() {
@@ -704,7 +872,7 @@ function closePreviousEnquiryModal() {
     }
 
     stagedLinkedEnquiryIds = [...selectedLinkedEnquiryIds];
-    modal.classList.remove('show');
+    closeDialog(modal);
 }
 
 function applyPreviousEnquirySelection() {
@@ -732,6 +900,8 @@ function renderPastEnquiryLinks() {
                 type="button"
                 class="past-enquiry-link-btn ${selected ? 'selected' : ''}"
                 data-enquiry-id="${enquiry.enquiryId}"
+                aria-pressed="${selected ? 'true' : 'false'}"
+                aria-label="${selected ? 'Unselect' : 'Select'} enquiry ${enquiry.enquiryId}"
                 onclick="togglePastEnquirySelection('${enquiry.enquiryId}')"
             >
                 <strong>${enquiry.enquiryId}</strong>: ${escapeHtml(truncateText(enquiry.details, 85))}
@@ -900,11 +1070,17 @@ function initializeStudentChatbot() {
 
     function openPanel() {
         panel.classList.add('show');
+        panel.hidden = false;
+        panel.setAttribute('aria-hidden', 'false');
+        fab.setAttribute('aria-expanded', 'true');
         input.focus();
     }
 
     function closePanel() {
         panel.classList.remove('show');
+        panel.hidden = true;
+        panel.setAttribute('aria-hidden', 'true');
+        fab.setAttribute('aria-expanded', 'false');
     }
 
     function appendMessage(text, sender) {
@@ -1195,7 +1371,10 @@ function openStaffKpiDetail(staffNameRaw) {
         </div>
     `;
 
-    modal.classList.add('show');
+    openDialog(modal, {
+        trigger: document.activeElement,
+        initialFocusSelector: '#staffKpiClose'
+    });
 }
 
 function initializeEnquiriesPage() {
@@ -1368,13 +1547,16 @@ function openEnquiryDetail(enquiryId) {
         </div>
     `;
 
-    modal.classList.add('show');
+    openDialog(modal, {
+        trigger: document.activeElement,
+        initialFocusSelector: '#enquiryDetailClose'
+    });
 }
 
 function closeEnquiryDetailModal() {
     const modal = document.getElementById('enquiryDetailModal');
     if (modal) {
-        modal.classList.remove('show');
+        closeDialog(modal);
     }
 }
 
@@ -1657,13 +1839,16 @@ function openAppointmentDetail(appointmentId) {
         </div>
     `;
 
-    modal.classList.add('show');
+    openDialog(modal, {
+        trigger: document.activeElement,
+        initialFocusSelector: '#appointmentDetailClose'
+    });
 }
 
 function closeAppointmentDetailModal() {
     const modal = document.getElementById('appointmentDetailModal');
     if (modal) {
-        modal.classList.remove('show');
+        closeDialog(modal);
     }
 }
 
@@ -1727,7 +1912,10 @@ function openBookingModal(invitationId) {
 
     renderBookingCalendar();
     renderBookingSlotsForDay();
-    modal.classList.add('show');
+    openDialog(modal, {
+        trigger: document.activeElement,
+        initialFocusSelector: '#bookingClose'
+    });
 }
 
 function renderBookingCalendar() {
@@ -1777,7 +1965,8 @@ function renderBookingCalendar() {
         }
 
         const clickAction = available ? `onclick="selectBookingDay('${iso}')"` : '';
-        cells.push(`<button type="button" class="${classes.join(' ')}" ${clickAction}>${day}</button>`);
+        const label = `${monthStart.toLocaleString('en-AU', { month: 'long' })} ${day}, ${bookingCalendarView.year}${available ? ', available' : ', unavailable'}`;
+        cells.push(`<button type="button" class="${classes.join(' ')}" aria-label="${label}" aria-pressed="${selected ? 'true' : 'false'}" ${clickAction}>${day}</button>`);
     }
 
     calendar.innerHTML = cells.join('');
@@ -1816,7 +2005,7 @@ function renderBookingSlotsForDay() {
         const availabilityClass = slot.available ? 'slot-btn available' : 'slot-btn unavailable';
 
         return `
-            <button type="button" class="${availabilityClass}" data-date="${slot.date}" data-time="${slot.time}" ${disabledText}>
+            <button type="button" class="${availabilityClass}" data-date="${slot.date}" data-time="${slot.time}" aria-pressed="false" aria-label="${slot.time} on ${slot.date} ${slot.available ? 'available' : 'unavailable'}" ${disabledText}>
                 ${slot.time} ${slot.available ? '(Available)' : '(Unavailable)'}
             </button>
         `;
@@ -1824,8 +2013,12 @@ function renderBookingSlotsForDay() {
 
     slotList.querySelectorAll('.slot-btn.available').forEach(function (button) {
         button.addEventListener('click', function () {
-            slotList.querySelectorAll('.slot-btn.available').forEach(function (item) { item.classList.remove('selected'); });
+            slotList.querySelectorAll('.slot-btn.available').forEach(function (item) {
+                item.classList.remove('selected');
+                item.setAttribute('aria-pressed', 'false');
+            });
             button.classList.add('selected');
+            button.setAttribute('aria-pressed', 'true');
         });
     });
 }
@@ -1833,7 +2026,7 @@ function renderBookingSlotsForDay() {
 function closeBookingModal() {
     const modal = document.getElementById('bookingModal');
     if (modal) {
-        modal.classList.remove('show');
+        closeDialog(modal);
     }
 
     activeInvitationId = '';
@@ -1947,6 +2140,21 @@ function initializeManagerStudentsPage() {
                 openStudentDetailModal(studentId);
             }
         });
+
+        tableBody.addEventListener('keydown', function (event) {
+            const row = event.target.closest('tr[data-student-id]');
+            if (!row) {
+                return;
+            }
+
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                const studentId = row.getAttribute('data-student-id') || '';
+                if (studentId) {
+                    openStudentDetailModal(studentId);
+                }
+            }
+        });
     }
 
     if (modal) {
@@ -1993,7 +2201,7 @@ function renderManagerStudentTable() {
 
     tableBody.innerHTML = filtered.map(function (student) {
         return `
-            <tr class="student-row" data-student-id="${student.studentID}">
+            <tr class="student-row" data-student-id="${student.studentID}" tabindex="0" role="button" aria-label="View details for ${escapeHtml(student.studentName)} (${student.studentID})">
                 <td>${student.studentID}</td>
                 <td>${escapeHtml(student.studentName)}</td>
                 <td>${escapeHtml(student.Major || student.major || '-')}</td>
@@ -2034,13 +2242,16 @@ function openStudentDetailModal(studentId) {
         </div>
     `;
 
-    modal.classList.add('show');
+    openDialog(modal, {
+        trigger: document.activeElement,
+        initialFocusSelector: '#studentDetailClose'
+    });
 }
 
 function closeStudentDetailModal() {
     const modal = document.getElementById('studentDetailModal');
     if (modal) {
-        modal.classList.remove('show');
+        closeDialog(modal);
     }
 }
 
@@ -2557,15 +2768,19 @@ function bindStaffDetailModal() {
     const overlay = document.getElementById('staffDetailOverlay');
     const closeBtn = document.getElementById('staffDetailClose');
 
+    if (!modal) {
+        return;
+    }
+
     if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-            modal.setAttribute('hidden', '');
+        closeBtn.addEventListener('click', function () {
+            closeDialog(modal);
         });
     }
 
     if (overlay) {
-        overlay.addEventListener('click', function() {
-            modal.setAttribute('hidden', '');
+        overlay.addEventListener('click', function () {
+            closeDialog(modal);
         });
     }
 }
@@ -2613,7 +2828,10 @@ function openStaffDetailModal(staffName) {
         </div>
     `;
 
-    modal.removeAttribute('hidden');
+    openDialog(modal, {
+        trigger: document.activeElement,
+        initialFocusSelector: '#staffDetailClose'
+    });
 }
 
 window.openEnquiryDetail = openEnquiryDetail;

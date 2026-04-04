@@ -194,6 +194,9 @@ h2 {
     flex-direction: column;
     gap: 5px;
     cursor: pointer;
+    border: none;
+    background: transparent;
+    padding: 4px;
 }
 
 .navbar-toggle span {
@@ -201,6 +204,12 @@ h2 {
     height: 3px;
     border-radius: 2px;
     background: var(--primary-text);
+}
+
+.navbar-toggle:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: 8px;
 }
 
 /* Cards */

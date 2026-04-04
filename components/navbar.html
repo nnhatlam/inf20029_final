@@ -4,7 +4,7 @@
             <img src="images/logo.svg" alt="Logo" class="navbar-logo">
             <span class="navbar-title">Student Support System</span>
         </div>
-        <ul class="navbar-menu">
+        <ul class="navbar-menu" id="primaryNavigation" aria-label="Primary navigation">
             <li class="manager-only" id="managerDashboardNav" hidden><a href="manager-dashboard.html" class="nav-link" data-page="manager-dashboard">Dashboard</a></li>
             <li class="manager-only" id="managerStudentsNav" hidden><a href="manager-students.html" class="nav-link" data-page="manager-students">Students</a></li>
             <li class="student-only"><a href="dashboard.html" class="nav-link" data-page="dashboard">Dashboard</a></li>
@@ -13,10 +13,10 @@
             <li class="student-only"><a href="feedback.html" class="nav-link" data-page="feedback">Feedback</a></li>
             <li><a href="settings.html" class="nav-link" data-page="settings">Settings</a></li>
         </ul>
-        <div class="navbar-toggle" id="navbarToggle">
+        <button class="navbar-toggle" id="navbarToggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="primaryNavigation">
             <span></span>
             <span></span>
             <span></span>
-        </div>
+        </button>
     </div>
 </nav>
