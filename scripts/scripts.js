@@ -2274,19 +2274,36 @@ function renderFeedbackTable() {
 
     body.innerHTML = resolvedRows.map(function (enquiry) {
         const hasRating = typeof enquiry.feedbackRating === 'number' && enquiry.feedbackRating > 0;
-        const ratingOptions = [1, 2, 3, 4, 5].map(function (rating) {
-            const selected = enquiry.feedbackRating === rating ? 'selected' : '';
-            return `<option value="${rating}" ${selected}>${rating} / 5</option>`;
+        const selectedStars = hasRating ? enquiry.feedbackRating : 0;
+        const starButtons = [1, 2, 3, 4, 5].map(function (rating) {
+            const isActive = rating <= selectedStars ? 'active' : '';
+            return `
+                <button
+                    type="button"
+                    class="star-btn ${isActive}"
+                    data-rating="${rating}"
+                    onclick="setFeedbackStarRating('${enquiry.enquiryId}', ${rating})"
+                    aria-label="${rating} star${rating > 1 ? 's' : ''}">
+                    ★
+                </button>
+            `;
         }).join('');
 
         const actionCell = hasRating
-            ? `<span class="status-pill resolved">Feedback sent (${enquiry.feedbackRating}/5)</span>`
+            ? `
+                <div class="feedback-readonly-wrap">
+                    <span class="feedback-stars-readonly" aria-label="${enquiry.feedbackRating} out of 5 stars">
+                        ${'★'.repeat(enquiry.feedbackRating)}${'☆'.repeat(5 - enquiry.feedbackRating)}
+                    </span>
+                    <span class="status-pill resolved">Feedback sent (${enquiry.feedbackRating}/5)</span>
+                </div>
+            `
             : `
                 <div class="feedback-action-wrap">
-                    <select id="feedbackRating-${enquiry.enquiryId}" class="feedback-rating-select">
-                        <option value="">Choose rating</option>
-                        ${ratingOptions}
-                    </select>
+                    <div id="feedbackStars-${enquiry.enquiryId}" class="star-rating" role="radiogroup" aria-label="Rate enquiry ${enquiry.enquiryId}">
+                        ${starButtons}
+                    </div>
+                    <input type="hidden" id="feedbackRating-${enquiry.enquiryId}" value="">
                     <button type="button" class="btn btn-primary btn-sm" onclick="sendFeedbackRating('${enquiry.enquiryId}')">Send Rating</button>
                 </div>
             `;
@@ -2301,7 +2318,7 @@ function renderFeedbackTable() {
                 <td>${escapeHtml(truncateText(enquiry.details, 85))}</td>
                 <td>${enquiry.resolvedAt || '-'}</td>
                 <td>${enquiry.assignedStaff || '-'}</td>
-                <td>${hasRating ? `${enquiry.feedbackRating}/5` : '-'}</td>
+                <td>${hasRating ? `<span class="feedback-stars-readonly" aria-label="${enquiry.feedbackRating} out of 5 stars">${'★'.repeat(enquiry.feedbackRating)}${'☆'.repeat(5 - enquiry.feedbackRating)}</span>` : '-'}</td>
                 <td>
                     ${actionCell}
                     <p class="feedback-status-text">${status}</p>
@@ -2311,16 +2328,34 @@ function renderFeedbackTable() {
     }).join('');
 }
 
+function setFeedbackStarRating(enquiryId, rating) {
+    const starsWrap = document.getElementById(`feedbackStars-${enquiryId}`);
+    const ratingInput = document.getElementById(`feedbackRating-${enquiryId}`);
+    const parsedRating = Number(rating);
+
+    if (!starsWrap || !ratingInput || parsedRating < 1 || parsedRating > 5) {
+        return;
+    }
+
+    ratingInput.value = String(parsedRating);
+
+    starsWrap.querySelectorAll('.star-btn').forEach(function (button) {
+        const buttonRating = Number(button.getAttribute('data-rating'));
+        button.classList.toggle('active', buttonRating <= parsedRating);
+        button.setAttribute('aria-pressed', buttonRating === parsedRating ? 'true' : 'false');
+    });
+}
+
 function sendFeedbackRating(enquiryId) {
     const enquiry = enquiries.find(function (item) { return item.enquiryId === enquiryId; });
     if (!enquiry || enquiry.status !== 'Resolved') {
         return;
     }
 
-    const select = document.getElementById(`feedbackRating-${enquiryId}`);
-    const rating = Number(select?.value || 0);
+    const ratingInput = document.getElementById(`feedbackRating-${enquiryId}`);
+    const rating = Number(ratingInput?.value || 0);
     if (!rating || rating < 1 || rating > 5) {
-        alert('Please choose a rating from 1 to 5.');
+        alert('Please select a star rating from 1 to 5.');
         return;
     }
 
@@ -2843,6 +2878,7 @@ window.openAppointmentDetail = openAppointmentDetail;
 window.openStaffKpiDetail = openStaffKpiDetail;
 window.togglePastEnquirySelection = togglePastEnquirySelection;
 window.sendFeedbackRating = sendFeedbackRating;
+window.setFeedbackStarRating = setFeedbackStarRating;
 window.openStaffDetailModal = openStaffDetailModal;
 window.renderManagerDashboardPage = renderManagerDashboardPage;
 window.openStudentDetailModal = openStudentDetailModal;

@@ -954,12 +954,49 @@ button:disabled {
     flex-wrap: wrap;
 }
 
-.feedback-rating-select {
+.feedback-readonly-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.star-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 6px;
     border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 7px 9px;
-    font: inherit;
+    border-radius: 10px;
     background: #fff;
+}
+
+.star-btn {
+    border: none;
+    background: transparent;
+    color: #b9b0a9;
+    font-size: 1.28rem;
+    line-height: 1;
+    padding: 2px;
+    cursor: pointer;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.star-btn:hover,
+.star-btn:focus-visible {
+    color: #f5b301;
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.star-btn.active {
+    color: #f5b301;
+}
+
+.feedback-stars-readonly {
+    color: #f5b301;
+    letter-spacing: 1px;
+    font-size: 1rem;
 }
 
 .feedback-status-text {
