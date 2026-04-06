@@ -2688,6 +2688,7 @@ function renderManagerDashboardPage() {
     renderNotifications();
     renderEnquirySummary();
     renderStaffPerformance();
+    renderPerformanceCharts();
     bindStaffDetailModal();
 }
 
@@ -2722,13 +2723,41 @@ function buildPrototypeManagerStats() {
         };
     });
 
+    const delayed = randomBetween(8, 22);
+    const escalated = randomBetween(4, 12);
+    const onTimeQuality = Math.max(resolved - delayed - escalated, 18);
+
+    const monthlyLabels = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'];
+    const baseScore = randomBetween(68, 76);
+    const monthlyTrend = monthlyLabels.map(function (month, index) {
+        const variance = randomBetween(-3, 6);
+        const score = Math.max(58, Math.min(96, baseScore + index * 3 + variance));
+        return {
+            label: month,
+            value: score
+        };
+    });
+
     return {
         summary: {
             resolved,
             pending,
             unresolved
         },
-        staff
+        staff,
+        charts: {
+            statusMix: [
+                { label: 'Resolved', value: resolved, color: '#66bb6a' },
+                { label: 'Pending', value: pending, color: '#ffa726' },
+                { label: 'Unresolved', value: unresolved, color: '#ef5350' }
+            ],
+            qualityMix: [
+                { label: 'On-Time', value: onTimeQuality, color: '#26a69a' },
+                { label: 'Delayed', value: delayed, color: '#f9a825' },
+                { label: 'Escalated', value: escalated, color: '#d81b60' }
+            ],
+            trend: monthlyTrend
+        }
     };
 }
 
@@ -2796,6 +2825,170 @@ function calculateStaffPerformanceWithPercentage() {
         prototypeManagerStats = buildPrototypeManagerStats();
     }
     return prototypeManagerStats.staff;
+}
+
+function renderPerformanceCharts() {
+    if (!prototypeManagerStats || !prototypeManagerStats.charts) {
+        return;
+    }
+
+    const statusCanvas = document.getElementById('statusPieChart');
+    const qualityCanvas = document.getElementById('qualityPieChart');
+    const lineCanvas = document.getElementById('performanceLineChart');
+    const statusLegend = document.getElementById('statusPieLegend');
+    const qualityLegend = document.getElementById('qualityPieLegend');
+
+    if (statusCanvas) {
+        drawPieChart(statusCanvas, prototypeManagerStats.charts.statusMix);
+    }
+    if (qualityCanvas) {
+        drawPieChart(qualityCanvas, prototypeManagerStats.charts.qualityMix);
+    }
+    if (lineCanvas) {
+        drawLineChart(lineCanvas, prototypeManagerStats.charts.trend);
+    }
+    if (statusLegend) {
+        renderPieLegend(statusLegend, prototypeManagerStats.charts.statusMix);
+    }
+    if (qualityLegend) {
+        renderPieLegend(qualityLegend, prototypeManagerStats.charts.qualityMix);
+    }
+}
+
+function drawPieChart(canvas, segments) {
+    const context = canvas.getContext('2d');
+    if (!context || !segments || !segments.length) {
+        return;
+    }
+
+    const width = canvas.width;
+    const height = canvas.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = Math.min(width, height) * 0.34;
+    const total = segments.reduce(function (sum, segment) {
+        return sum + segment.value;
+    }, 0);
+
+    context.clearRect(0, 0, width, height);
+
+    let startAngle = -Math.PI / 2;
+    segments.forEach(function (segment) {
+        const sliceAngle = total > 0 ? (segment.value / total) * Math.PI * 2 : 0;
+        const endAngle = startAngle + sliceAngle;
+
+        context.beginPath();
+        context.moveTo(centerX, centerY);
+        context.arc(centerX, centerY, radius, startAngle, endAngle);
+        context.closePath();
+        context.fillStyle = segment.color;
+        context.fill();
+
+        startAngle = endAngle;
+    });
+
+    context.beginPath();
+    context.arc(centerX, centerY, radius * 0.55, 0, Math.PI * 2);
+    context.fillStyle = '#fff';
+    context.fill();
+
+    context.fillStyle = '#5b2730';
+    context.textAlign = 'center';
+    context.font = '700 26px Poppins, sans-serif';
+    context.fillText(String(total), centerX, centerY + 8);
+    context.font = '600 12px Poppins, sans-serif';
+    context.fillText('Total', centerX, centerY + 28);
+}
+
+function renderPieLegend(container, segments) {
+    const total = segments.reduce(function (sum, segment) {
+        return sum + segment.value;
+    }, 0);
+
+    let html = '';
+    segments.forEach(function (segment) {
+        const percentage = total > 0 ? Math.round((segment.value / total) * 100) : 0;
+        html += `
+            <div class="chart-legend-item">
+                <span class="legend-left">
+                    <span class="legend-dot" style="background:${segment.color}"></span>
+                    <span>${escapeHtml(segment.label)}</span>
+                </span>
+                <span class="legend-value">${segment.value} (${percentage}%)</span>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function drawLineChart(canvas, points) {
+    const context = canvas.getContext('2d');
+    if (!context || !points || points.length < 2) {
+        return;
+    }
+
+    const width = canvas.width;
+    const height = canvas.height;
+    const padding = { top: 24, right: 24, bottom: 40, left: 44 };
+    const chartWidth = width - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
+    const maxValue = 100;
+    const minValue = 0;
+
+    context.clearRect(0, 0, width, height);
+
+    context.strokeStyle = '#ead5d1';
+    context.lineWidth = 1;
+    for (let i = 0; i <= 5; i += 1) {
+        const y = padding.top + (chartHeight / 5) * i;
+        context.beginPath();
+        context.moveTo(padding.left, y);
+        context.lineTo(width - padding.right, y);
+        context.stroke();
+    }
+
+    context.fillStyle = '#7a5757';
+    context.font = '600 11px Poppins, sans-serif';
+    context.textAlign = 'right';
+    for (let value = 0; value <= 100; value += 20) {
+        const y = padding.top + chartHeight - ((value - minValue) / (maxValue - minValue)) * chartHeight;
+        context.fillText(String(value), padding.left - 8, y + 4);
+    }
+
+    const stepX = chartWidth / (points.length - 1);
+
+    context.beginPath();
+    points.forEach(function (point, index) {
+        const x = padding.left + index * stepX;
+        const y = padding.top + chartHeight - ((point.value - minValue) / (maxValue - minValue)) * chartHeight;
+        if (index === 0) {
+            context.moveTo(x, y);
+        } else {
+            context.lineTo(x, y);
+        }
+    });
+    context.strokeStyle = '#9e182b';
+    context.lineWidth = 3;
+    context.stroke();
+
+    points.forEach(function (point, index) {
+        const x = padding.left + index * stepX;
+        const y = padding.top + chartHeight - ((point.value - minValue) / (maxValue - minValue)) * chartHeight;
+
+        context.beginPath();
+        context.arc(x, y, 5, 0, Math.PI * 2);
+        context.fillStyle = '#ffffff';
+        context.fill();
+        context.lineWidth = 2;
+        context.strokeStyle = '#9e182b';
+        context.stroke();
+
+        context.textAlign = 'center';
+        context.fillStyle = '#5b2730';
+        context.font = '600 11px Poppins, sans-serif';
+        context.fillText(point.label, x, height - 14);
+    });
 }
 
 function bindStaffDetailModal() {

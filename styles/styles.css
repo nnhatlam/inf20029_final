@@ -1511,6 +1511,76 @@ button:disabled {
     margin-top: 4px;
 }
 
+/* Performance Charts */
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.chart-panel {
+    background: #fff;
+    border: 1px solid #ead5d1;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.chart-panel-wide {
+    width: 100%;
+}
+
+.chart-title {
+    color: #5b2730;
+    font-size: 1rem;
+    margin-bottom: 12px;
+}
+
+.chart-canvas {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #fff 0%, #fcf8f8 100%);
+}
+
+.chart-legend {
+    margin-top: 12px;
+    display: grid;
+    gap: 8px;
+}
+
+.chart-legend-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #faf9f8;
+    border: 1px solid #ead5d1;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.84rem;
+    color: #5f3f3f;
+}
+
+.legend-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    flex-shrink: 0;
+}
+
+.legend-value {
+    font-weight: 700;
+    color: #9e182b;
+}
+
 /* Staff Detail Modal */
 .detail-grid {
     display: grid;
@@ -1549,6 +1619,10 @@ button:disabled {
     .staff-performance-grid {
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
+
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1558,6 +1632,10 @@ button:disabled {
 
     .staff-performance-grid {
         grid-template-columns: 1fr;
+    }
+
+    .chart-panel {
+        padding: 14px;
     }
 
     .performance-stats {

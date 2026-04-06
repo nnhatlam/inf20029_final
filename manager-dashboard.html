@@ -48,6 +48,31 @@
                     </div>
                 </article>
 
+                <article class="card">
+                    <div class="card-header">
+                        <h2>Performance Analytics</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="field-note">Prototype metrics using demo data for visual performance tracking.</p>
+                        <div class="chart-grid">
+                            <div class="chart-panel">
+                                <h3 class="chart-title">Enquiry Status Mix</h3>
+                                <canvas id="statusPieChart" class="chart-canvas" width="320" height="220" aria-label="Pie chart of enquiry status mix"></canvas>
+                                <div id="statusPieLegend" class="chart-legend"></div>
+                            </div>
+                            <div class="chart-panel">
+                                <h3 class="chart-title">Staff Resolution Quality</h3>
+                                <canvas id="qualityPieChart" class="chart-canvas" width="320" height="220" aria-label="Pie chart of staff resolution quality"></canvas>
+                                <div id="qualityPieLegend" class="chart-legend"></div>
+                            </div>
+                        </div>
+                        <div class="chart-panel chart-panel-wide">
+                            <h3 class="chart-title">Performance Overview Trend</h3>
+                            <canvas id="performanceLineChart" class="chart-canvas" width="760" height="280" aria-label="Line graph of monthly performance overview"></canvas>
+                        </div>
+                    </div>
+                </article>
+
                 <!-- Staff Performance Detail Modal -->
                 <div id="staffDetailModal" class="modal" role="dialog" aria-modal="true" aria-label="Staff performance details" aria-hidden="true" hidden>
                     <div class="modal-overlay" id="staffDetailOverlay"></div>
